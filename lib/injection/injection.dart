@@ -36,6 +36,29 @@ import '../features/dictionary/domain/usecases/search_words.dart';
 import '../features/dictionary/presentation/bloc/search_bloc.dart';
 import '../features/dictionary/presentation/bloc/word_detail_bloc.dart';
 import '../features/dictionary/presentation/bloc/word_list_bloc.dart';
+import '../features/community/data/datasources/bookmark_local_data_source.dart';
+import '../features/community/data/datasources/bookmark_remote_data_source.dart';
+import '../features/community/data/datasources/comment_remote_data_source.dart';
+import '../features/community/data/datasources/vote_remote_data_source.dart';
+import '../features/community/data/repositories/bookmark_repository_impl.dart';
+import '../features/community/data/repositories/comment_repository_impl.dart';
+import '../features/community/data/repositories/vote_repository_impl.dart';
+import '../features/community/domain/repositories/bookmark_repository.dart';
+import '../features/community/domain/repositories/comment_repository.dart';
+import '../features/community/domain/repositories/vote_repository.dart';
+import '../features/community/domain/usecases/add_bookmark.dart';
+import '../features/community/domain/usecases/cast_vote.dart';
+import '../features/community/domain/usecases/delete_comment.dart';
+import '../features/community/domain/usecases/edit_comment.dart';
+import '../features/community/domain/usecases/flag_comment.dart';
+import '../features/community/domain/usecases/get_bookmarks.dart';
+import '../features/community/domain/usecases/get_comments.dart';
+import '../features/community/domain/usecases/post_comment.dart';
+import '../features/community/domain/usecases/remove_bookmark.dart';
+import '../features/community/domain/usecases/remove_vote.dart';
+import '../features/community/presentation/bloc/bookmark_bloc.dart';
+import '../features/community/presentation/bloc/comment_bloc.dart';
+import '../features/community/presentation/bloc/vote_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -160,6 +183,73 @@ Future<void> initDependencies() async {
       getDefinitions: sl<GetDefinitions>(),
       getExamples: sl<GetExamples>(),
       getRelatedWords: sl<GetRelatedWords>(),
+    ),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Community — Data layer
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton<VoteRemoteDataSource>(
+    () => VoteRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<VoteRepository>(
+    () => VoteRepositoryImpl(remoteDataSource: sl<VoteRemoteDataSource>()),
+  );
+
+  sl.registerLazySingleton<BookmarkRemoteDataSource>(
+    () => BookmarkRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton(
+    () => BookmarkLocalDataSource(cache: sl<LocalCache>()),
+  );
+  sl.registerLazySingleton<BookmarkRepository>(
+    () => BookmarkRepositoryImpl(
+      remote: sl<BookmarkRemoteDataSource>(),
+      local: sl<BookmarkLocalDataSource>(),
+    ),
+  );
+
+  sl.registerLazySingleton<CommentRemoteDataSource>(
+    () => CommentRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<CommentRepository>(
+    () => CommentRepositoryImpl(remote: sl<CommentRemoteDataSource>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Community — Use cases
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton(() => CastVote(sl<VoteRepository>()));
+  sl.registerLazySingleton(() => RemoveVote(sl<VoteRepository>()));
+  sl.registerLazySingleton(() => GetBookmarks(sl<BookmarkRepository>()));
+  sl.registerLazySingleton(() => AddBookmark(sl<BookmarkRepository>()));
+  sl.registerLazySingleton(() => RemoveBookmark(sl<BookmarkRepository>()));
+  sl.registerLazySingleton(() => GetComments(sl<CommentRepository>()));
+  sl.registerLazySingleton(() => PostComment(sl<CommentRepository>()));
+  sl.registerLazySingleton(() => EditComment(sl<CommentRepository>()));
+  sl.registerLazySingleton(() => DeleteComment(sl<CommentRepository>()));
+  sl.registerLazySingleton(() => FlagComment(sl<CommentRepository>()));
+
+  // ---------------------------------------------------------------------------
+  // Community — Blocs
+  // ---------------------------------------------------------------------------
+  sl.registerFactory(
+    () => VoteBloc(castVote: sl<CastVote>(), removeVote: sl<RemoveVote>()),
+  );
+  sl.registerFactory(
+    () => BookmarkBloc(
+      getBookmarks: sl<GetBookmarks>(),
+      addBookmark: sl<AddBookmark>(),
+      removeBookmark: sl<RemoveBookmark>(),
+    ),
+  );
+  sl.registerFactory(
+    () => CommentBloc(
+      getComments: sl<GetComments>(),
+      postComment: sl<PostComment>(),
+      editComment: sl<EditComment>(),
+      deleteComment: sl<DeleteComment>(),
+      flagComment: sl<FlagComment>(),
     ),
   );
 }

@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/community/presentation/bloc/bookmark_bloc.dart';
 import 'features/dictionary/presentation/bloc/search_bloc.dart';
 import 'features/dictionary/presentation/bloc/word_detail_bloc.dart';
 import 'features/dictionary/presentation/bloc/word_list_bloc.dart';
@@ -43,6 +44,9 @@ class BanjarinApp extends StatelessWidget {
         ),
         BlocProvider<WordDetailBloc>(
           create: (_) => sl<WordDetailBloc>(),
+        ),
+        BlocProvider<BookmarkBloc>(
+          create: (_) => sl<BookmarkBloc>(),
         ),
       ],
       child: MaterialApp.router(

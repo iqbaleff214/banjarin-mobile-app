@@ -4,6 +4,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../community/domain/entities/vote.dart';
+import '../../../community/presentation/bloc/bookmark_bloc.dart';
+import '../../../community/presentation/bloc/bookmark_event.dart';
+import '../../../community/presentation/bloc/bookmark_state.dart';
+import '../../../community/presentation/bloc/comment_bloc.dart';
+import '../../../community/presentation/bloc/comment_event.dart';
+import '../../../community/presentation/bloc/comment_state.dart';
+import '../../../community/presentation/widgets/comment_input.dart';
+import '../../../community/presentation/widgets/comment_tile.dart';
+import '../../../community/presentation/widgets/vote_row.dart';
+import '../../../identity/presentation/bloc/auth_bloc.dart';
+import '../../../identity/presentation/bloc/auth_state.dart';
 import '../../domain/entities/definition.dart';
 import '../../domain/entities/example.dart';
 import '../../domain/entities/word.dart';
@@ -35,6 +47,8 @@ class _WordDetailPageState extends State<WordDetailPage>
     super.initState();
     _tabCtrl = TabController(length: 4, vsync: this);
     context.read<WordDetailBloc>().add(LoadWordDetail(widget.wordId));
+    context.read<BookmarkBloc>().add(CheckBookmarkStatus(widget.wordId));
+    context.read<CommentBloc>().add(LoadComments(widget.wordId));
   }
 
   @override
@@ -87,7 +101,7 @@ class _WordDetailPageState extends State<WordDetailPage>
                   _DefinisiTab(definitions: defs, word: word),
                   _ContohTab(examples: exs),
                   _KataTerkaitTab(relatedWords: related),
-                  _KomentarTab(),
+                  _KomentarTab(wordId: widget.wordId),
                 ],
               ),
           },
@@ -104,6 +118,9 @@ class _WordHeaderTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    final isAuth = authState is Authenticated;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,6 +140,32 @@ class _WordHeaderTitle extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+            const Spacer(),
+            // Bookmark icon
+            BlocBuilder<BookmarkBloc, BookmarkState>(
+              builder: (context, state) {
+                final isBookmarked = state is BookmarkLoaded
+                    ? (state.isBookmarked ?? false)
+                    : false;
+                return IconButton(
+                  icon: Icon(
+                    isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+                    color: isBookmarked ? AppColors.primary : null,
+                  ),
+                  tooltip: isBookmarked ? 'Hapus simpanan' : 'Simpan',
+                  onPressed: () {
+                    if (!isAuth) {
+                      context.go(Routes.login);
+                      return;
+                    }
+                    context.read<BookmarkBloc>().add(ToggleBookmark(
+                          wordId: word.id,
+                          isCurrentlyBookmarked: isBookmarked,
+                        ));
+                  },
+                );
+              },
+            ),
           ],
         ),
         if (word.banjarSyllabified != null)
@@ -136,6 +179,13 @@ class _WordHeaderTitle extends StatelessWidget {
             WordClassChip(wordClass: word.wordClass),
             const SizedBox(width: 4),
             SourceBadge(source: word.source),
+            const Spacer(),
+            // Word-level vote
+            VoteRow(
+              targetId: word.id,
+              targetType: VoteTargetType.word,
+              isAuthenticated: isAuth,
+            ),
           ],
         ),
       ],
@@ -212,10 +262,58 @@ class _KataTerkaitTab extends StatelessWidget {
 }
 
 class _KomentarTab extends StatelessWidget {
+  final String wordId;
+
+  const _KomentarTab({required this.wordId});
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Komentar tersedia di Phase 3.'),
+    final authState = context.watch<AuthBloc>().state;
+    final isAuth = authState is Authenticated;
+    final userId = switch (authState) {
+      Authenticated(:final user) => user.id,
+      _ => null,
+    };
+
+    return Column(
+      children: [
+        Expanded(
+          child: BlocBuilder<CommentBloc, CommentState>(
+            builder: (context, state) {
+              return switch (state) {
+                CommentsLoading() => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                CommentError(failure: final f, currentComments: null) => Center(
+                    child: Text(f.message),
+                  ),
+                CommentsLoaded(comments: final comments) ||
+                CommentAdded(comments: final comments) ||
+                CommentUpdated(comments: final comments) ||
+                CommentDeleted(comments: final comments) ||
+                CommentPosting(currentComments: final comments) ||
+                CommentEditing(currentComments: final comments) ||
+                CommentError(currentComments: final comments?) =>
+                  comments.isEmpty
+                      ? const Center(
+                          child: Text('Belum ada komentar. Jadilah yang pertama!'),
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: comments.length,
+                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          itemBuilder: (_, i) => CommentTile(
+                            comment: comments[i],
+                            currentUserId: userId,
+                          ),
+                        ),
+                _ => const SizedBox.shrink(),
+              };
+            },
+          ),
+        ),
+        CommentInput(wordId: wordId, isAuthenticated: isAuth),
+      ],
     );
   }
 }

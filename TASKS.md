@@ -670,7 +670,7 @@
 
 ---
 
-- [ ] **TASK-028: Vote Entity, Repository Interface, and Use Cases**
+- [x] **TASK-028: Vote Entity, Repository Interface, and Use Cases**
 
   **API:** `POST /words/{id}/votes`, `DELETE /words/{id}/votes`, `POST /definitions/{id}/votes`, `DELETE /definitions/{id}/votes`
 
@@ -694,7 +694,7 @@
 
 ---
 
-- [ ] **TASK-029: Bookmark Entity, Repository Interface, and Use Cases**
+- [x] **TASK-029: Bookmark Entity, Repository Interface, and Use Cases**
 
   **API:** `GET /bookmarks`, `POST /bookmarks`, `DELETE /bookmarks/{word_id}`
 
@@ -719,7 +719,7 @@
 
 ---
 
-- [ ] **TASK-030: Comment Entity, Repository Interface, and Use Cases**
+- [x] **TASK-030: Comment Entity, Repository Interface, and Use Cases**
 
   **API:** `GET /words/{id}/comments`, `POST /words/{id}/comments`, `PATCH /comments/{id}`, `DELETE /comments/{id}`, `POST /comments/{id}/flag`
 
@@ -748,7 +748,7 @@
 
 ---
 
-- [ ] **TASK-031: Vote Data Layer**
+- [x] **TASK-031: Vote Data Layer**
 
   **Expected Output:**
   - `lib/features/community/data/models/vote_model.dart`
@@ -768,7 +768,7 @@
 
 ---
 
-- [ ] **TASK-032: Bookmark Data Layer**
+- [x] **TASK-032: Bookmark Data Layer**
 
   **Expected Output:**
   - `lib/features/community/data/models/bookmark_model.dart`
@@ -789,7 +789,7 @@
 
 ---
 
-- [ ] **TASK-033: Comment Data Layer**
+- [x] **TASK-033: Comment Data Layer**
 
   **Expected Output:**
   - `lib/features/community/data/models/comment_model.dart`
@@ -807,7 +807,7 @@
 
 ---
 
-- [ ] **TASK-034: VoteBloc**
+- [x] **TASK-034: VoteBloc**
 
   **Description:** Manages vote state for a single word or definition. Used by both Word Detail and Definition Tile.
 
@@ -829,7 +829,7 @@
 
 ---
 
-- [ ] **TASK-035: BookmarkBloc and Simpanan Page**
+- [x] **TASK-035: BookmarkBloc and Simpanan Page**
 
   **Expected Output:**
   - `lib/features/community/presentation/bloc/bookmark_bloc.dart`
@@ -850,7 +850,7 @@
 
 ---
 
-- [ ] **TASK-036: CommentBloc and Comments Section in Word Detail**
+- [x] **TASK-036: CommentBloc and Comments Section in Word Detail**
 
   **Expected Output:**
   - `lib/features/community/presentation/bloc/comment_bloc.dart`

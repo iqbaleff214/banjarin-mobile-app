@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/community/presentation/bloc/comment_bloc.dart';
+import '../../features/community/presentation/bloc/vote_bloc.dart';
+import '../../features/community/presentation/pages/simpanan_page.dart';
 import '../../features/dictionary/presentation/bloc/word_detail_bloc.dart';
 import '../../features/dictionary/presentation/pages/beranda_page.dart';
 import '../../features/dictionary/presentation/pages/cari_page.dart';
@@ -76,7 +79,7 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: Routes.bookmarks,
-            builder: (_, _) => const _PlaceholderPage('Simpanan'),
+            builder: (_, _) => const SimpananPage(),
           ),
           GoRoute(
             path: Routes.profile,
@@ -85,13 +88,23 @@ GoRouter createRouter() {
         ],
       ),
 
-      // Word detail (outside shell — fresh WordDetailBloc per word)
+      // Word detail — fresh blocs scoped to this page
       GoRoute(
         path: Routes.wordDetail,
         builder: (context, state) {
           final wordId = state.pathParameters['id']!;
-          return BlocProvider<WordDetailBloc>(
-            create: (_) => sl<WordDetailBloc>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<WordDetailBloc>(
+                create: (_) => sl<WordDetailBloc>(),
+              ),
+              BlocProvider<VoteBloc>(
+                create: (_) => sl<VoteBloc>(),
+              ),
+              BlocProvider<CommentBloc>(
+                create: (_) => sl<CommentBloc>(),
+              ),
+            ],
             child: WordDetailPage(wordId: wordId),
           );
         },
