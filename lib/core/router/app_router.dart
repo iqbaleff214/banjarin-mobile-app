@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/identity/domain/usecases/forgot_password.dart';
+import '../../features/identity/domain/usecases/reset_password.dart';
+import '../../features/identity/domain/usecases/verify_email.dart';
+import '../../features/identity/presentation/pages/change_password_page.dart';
+import '../../features/identity/presentation/pages/edit_profile_page.dart';
+import '../../features/identity/presentation/pages/forgot_password_page.dart';
+import '../../features/identity/presentation/pages/login_page.dart';
+import '../../features/identity/presentation/pages/profile_page.dart';
+import '../../features/identity/presentation/pages/register_page.dart';
+import '../../features/identity/presentation/pages/reset_password_page.dart';
+import '../../features/identity/presentation/pages/verify_email_page.dart';
+import '../../injection/injection.dart';
 import 'routes.dart';
 
 // ---------------------------------------------------------------------------
@@ -62,12 +74,12 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: Routes.profile,
-            builder: (_, _) => const _PlaceholderPage('Profil'),
+            builder: (_, _) => const ProfilePage(),
           ),
         ],
       ),
 
-      // Word detail (outside shell — no bottom nav on detail)
+      // Word detail (outside shell)
       GoRoute(
         path: Routes.wordDetail,
         builder: (context, state) => _PlaceholderPage(
@@ -78,41 +90,49 @@ GoRouter createRouter() {
       // Auth routes
       GoRoute(
         path: Routes.login,
-        builder: (_, _) => const _PlaceholderPage('Masuk'),
+        builder: (_, _) => const LoginPage(),
       ),
       GoRoute(
         path: Routes.register,
-        builder: (_, _) => const _PlaceholderPage('Daftar'),
+        builder: (_, _) => const RegisterPage(),
       ),
       GoRoute(
         path: Routes.forgotPassword,
-        builder: (_, _) => const _PlaceholderPage('Lupa Kata Sandi'),
+        builder: (_, _) => ForgotPasswordPage(
+          forgotPasswordUseCase: sl<ForgotPassword>(),
+        ),
       ),
       GoRoute(
         path: Routes.resetPassword,
         builder: (context, state) {
           final token = state.uri.queryParameters['token'] ?? '';
-          return _PlaceholderPage('Reset Kata Sandi: $token');
+          return ResetPasswordPage(
+            token: token,
+            resetPasswordUseCase: sl<ResetPassword>(),
+          );
         },
       ),
-
-      // Deep link: email verification
       GoRoute(
         path: Routes.verifyEmail,
         builder: (context, state) {
-          final token = state.uri.queryParameters['token'] ?? '';
-          return _PlaceholderPage('Verifikasi Email: $token');
+          final email = state.uri.queryParameters['email'] ?? '';
+          final token = state.uri.queryParameters['token'];
+          return VerifyEmailPage(
+            email: email,
+            token: token,
+            verifyEmailUseCase: sl<VerifyEmail>(),
+          );
         },
       ),
 
       // Profile sub-routes
       GoRoute(
         path: Routes.editProfile,
-        builder: (_, _) => const _PlaceholderPage('Edit Profil'),
+        builder: (_, _) => const EditProfilePage(),
       ),
       GoRoute(
         path: Routes.changePassword,
-        builder: (_, _) => const _PlaceholderPage('Ubah Kata Sandi'),
+        builder: (_, _) => const ChangePasswordPage(),
       ),
       GoRoute(
         path: Routes.myContributions,
@@ -132,13 +152,11 @@ GoRouter createRouter() {
         routes: [
           GoRoute(
             path: 'words',
-            builder: (_, _) =>
-                const _PlaceholderPage('Manajemen Kata'),
+            builder: (_, _) => const _PlaceholderPage('Manajemen Kata'),
           ),
           GoRoute(
             path: 'words/create',
-            builder: (_, _) =>
-                const _PlaceholderPage('Tambah Kata'),
+            builder: (_, _) => const _PlaceholderPage('Tambah Kata'),
           ),
           GoRoute(
             path: 'words/:id/edit',
@@ -148,8 +166,7 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: 'moderasi/antrian',
-            builder: (_, _) =>
-                const _PlaceholderPage('Antrian Moderasi'),
+            builder: (_, _) => const _PlaceholderPage('Antrian Moderasi'),
           ),
           GoRoute(
             path: 'moderasi/kontribusi/:id',
@@ -159,13 +176,11 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: 'moderasi/komentar',
-            builder: (_, _) =>
-                const _PlaceholderPage('Komentar Ditandai'),
+            builder: (_, _) => const _PlaceholderPage('Komentar Ditandai'),
           ),
           GoRoute(
             path: 'pengguna',
-            builder: (_, _) =>
-                const _PlaceholderPage('Manajemen Pengguna'),
+            builder: (_, _) => const _PlaceholderPage('Manajemen Pengguna'),
           ),
           GoRoute(
             path: 'pengguna/:id',
@@ -175,8 +190,7 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: 'ai/permintaan',
-            builder: (_, _) =>
-                const _PlaceholderPage('Permintaan AI'),
+            builder: (_, _) => const _PlaceholderPage('Permintaan AI'),
           ),
           GoRoute(
             path: 'ai/permintaan/:id',

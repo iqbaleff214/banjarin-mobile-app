@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/identity/presentation/bloc/auth_bloc.dart';
+import 'features/identity/presentation/bloc/auth_event.dart';
+import 'features/identity/presentation/bloc/profile_bloc.dart';
 import 'injection/injection.dart';
 
 Future<void> main() async {
@@ -19,13 +23,23 @@ class BanjarinApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Banjarin',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: createRouter(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>()..add(const CheckSession()),
+        ),
+        BlocProvider<ProfileBloc>(
+          create: (_) => sl<ProfileBloc>(),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Banjarin',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        routerConfig: createRouter(),
+      ),
     );
   }
 }

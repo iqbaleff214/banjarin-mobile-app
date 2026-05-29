@@ -199,7 +199,7 @@
 
 ---
 
-- [ ] **TASK-009: User Entity, TokenPair, and AuthSession**
+- [x] **TASK-009: User Entity, TokenPair, and AuthSession**
 
   **Description:** Define pure Dart domain entities for the Identity bounded context. No JSON parsing here — that belongs in the data layer.
 
@@ -221,7 +221,7 @@
 
 ---
 
-- [ ] **TASK-010: AuthRepository Interface**
+- [x] **TASK-010: AuthRepository Interface**
 
   **Description:** Define the abstract `AuthRepository` interface used by all identity use cases. No implementation here.
 
@@ -238,7 +238,7 @@
 
 ---
 
-- [ ] **TASK-011: Login, Register, Logout, and RefreshToken Use Cases**
+- [x] **TASK-011: Login, Register, Logout, and RefreshToken Use Cases**
 
   **Description:** Implement use cases for the core auth flow. Each use case takes a `Params` class and returns `Either<Failure, T>`.
 
@@ -266,7 +266,7 @@
 
 ---
 
-- [ ] **TASK-012: GetProfile, UpdateProfile, and ChangePassword Use Cases**
+- [x] **TASK-012: GetProfile, UpdateProfile, and ChangePassword Use Cases**
 
   **Expected Output:**
   - `lib/features/identity/domain/usecases/get_profile.dart`
@@ -286,7 +286,7 @@
 
 ---
 
-- [ ] **TASK-013: ForgotPassword, ResetPassword, and VerifyEmail Use Cases**
+- [x] **TASK-013: ForgotPassword, ResetPassword, and VerifyEmail Use Cases**
 
   **Expected Output:**
   - `lib/features/identity/domain/usecases/forgot_password.dart`
@@ -305,7 +305,7 @@
 
 ---
 
-- [ ] **TASK-014: Auth Data Layer (Remote Data Source + Models + Repository Impl)**
+- [x] **TASK-014: Auth Data Layer (Remote Data Source + Models + Repository Impl)**
 
   **API:** `POST /auth/login`, `POST /auth/register`, `POST /auth/logout`, `POST /auth/refresh`, `GET /auth/me`, `PATCH /auth/me`, `PATCH /auth/me/password`, `POST /auth/verify-email`, `POST /auth/forgot-password`, `POST /auth/reset-password`
 
@@ -332,7 +332,7 @@
 
 ---
 
-- [ ] **TASK-015: AuthBloc**
+- [x] **TASK-015: AuthBloc**
 
   **Description:** Manages authentication state machine: `Unauthenticated`, `Authenticating`, `Authenticated(User)`, `AuthError`. Handles login, register, logout, session restore on app start.
 
@@ -361,7 +361,7 @@
 
 ---
 
-- [ ] **TASK-016: Login and Register Pages**
+- [x] **TASK-016: Login and Register Pages**
 
   **Description:** Build the Login and Register screens per PRD §4.2.1 and §4.2.2. Both pages observe `AuthBloc`.
 
@@ -390,7 +390,7 @@
 
 ---
 
-- [ ] **TASK-017: Forgot Password, Reset Password, and Verify Email Pages**
+- [x] **TASK-017: Forgot Password, Reset Password, and Verify Email Pages**
 
   **Expected Output:**
   - `lib/features/identity/presentation/pages/forgot_password_page.dart`
@@ -411,7 +411,7 @@
 
 ---
 
-- [ ] **TASK-018: Profile Page (View, Edit, Change Password, Logout)**
+- [x] **TASK-018: Profile Page (View, Edit, Change Password, Logout)**
 
   **API:** `GET /auth/me`, `PATCH /auth/me`, `PATCH /auth/me/password`, `POST /auth/logout`
 
