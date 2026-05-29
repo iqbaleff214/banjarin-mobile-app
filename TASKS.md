@@ -980,7 +980,7 @@
 
 ---
 
-- [ ] **TASK-041: Contribution Entity, Repository Interface, and Use Cases**
+- [x] **TASK-041: Contribution Entity, Repository Interface, and Use Cases**
 
   **Expected Output:**
   - `lib/features/community/domain/entities/contribution.dart` — `id`, `type` (enum: `new_word`/`new_definition`/`new_example`/`edit_word`), `contributorId`, `targetWordId`, `payload`, `status` (enum), `reviewerNote`, `submittedAt`, `reviewedAt`
@@ -1008,7 +1008,7 @@
 
 ---
 
-- [ ] **TASK-042: Contribution Data Layer**
+- [x] **TASK-042: Contribution Data Layer**
 
   **API:** `POST /contributions`, `GET /contributions`, `GET /contributions/{id}`, `PATCH /contributions/{id}/withdraw`
 
@@ -1030,7 +1030,7 @@
 
 ---
 
-- [ ] **TASK-043: ContributionBloc**
+- [x] **TASK-043: ContributionBloc**
 
   **Expected Output:**
   - `lib/features/community/presentation/bloc/contribution_bloc.dart`
@@ -1049,7 +1049,7 @@
 
 ---
 
-- [ ] **TASK-044: Contribution Form Pages**
+- [x] **TASK-044: Contribution Form Pages**
 
   **Description:** Four form pages for each contribution type. All forms validate inline before submission.
 
@@ -1078,7 +1078,7 @@
 
 ---
 
-- [ ] **TASK-045: My Contributions Page, Contribution Detail, and FAB on Word Detail**
+- [x] **TASK-045: My Contributions Page, Contribution Detail, and FAB on Word Detail**
 
   **Expected Output:**
   - `lib/features/community/presentation/pages/my_contributions_page.dart`

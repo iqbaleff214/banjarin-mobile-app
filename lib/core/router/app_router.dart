@@ -6,6 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/community/presentation/bloc/comment_bloc.dart';
 import '../../features/community/presentation/bloc/vote_bloc.dart';
 import '../../features/ai/presentation/pages/terjemah_page.dart';
+import '../../features/community/presentation/pages/contribution_edit_word_page.dart';
+import '../../features/community/presentation/pages/contribution_new_definition_page.dart';
+import '../../features/community/presentation/pages/contribution_new_example_page.dart';
+import '../../features/community/presentation/pages/contribution_new_word_page.dart';
+import '../../features/community/presentation/pages/my_contributions_page.dart';
 import '../../features/community/presentation/pages/simpanan_page.dart';
 import '../../features/dictionary/presentation/bloc/word_detail_bloc.dart';
 import '../../features/dictionary/presentation/pages/beranda_page.dart';
@@ -160,7 +165,7 @@ GoRouter createRouter() {
       ),
       GoRoute(
         path: Routes.myContributions,
-        builder: (_, _) => const _PlaceholderPage('Kontribusiku'),
+        builder: (_, _) => const MyContributionsPage(),
       ),
       GoRoute(
         path: Routes.contributionDetail,
@@ -169,6 +174,45 @@ GoRouter createRouter() {
         ),
       ),
 
+
+      // Contribution form routes
+      GoRoute(
+        path: Routes.contributionNewWord,
+        builder: (_, _) => const ContributionNewWordPage(),
+      ),
+      GoRoute(
+        path: Routes.contributionNewDefinition,
+        builder: (context, state) {
+          final wordId = state.uri.queryParameters['wordId'] ?? '';
+          final banjar = state.uri.queryParameters['wordBanjar'] ?? '';
+          return ContributionNewDefinitionPage(
+            wordId: wordId,
+            wordBanjar: Uri.decodeComponent(banjar),
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.contributionNewExample,
+        builder: (context, state) {
+          final wordId = state.uri.queryParameters['wordId'] ?? '';
+          final banjar = state.uri.queryParameters['wordBanjar'] ?? '';
+          return ContributionNewExamplePage(
+            wordId: wordId,
+            wordBanjar: Uri.decodeComponent(banjar),
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.contributionEditWord,
+        builder: (context, state) {
+          final wordId = state.uri.queryParameters['wordId'] ?? '';
+          final banjar = state.uri.queryParameters['wordBanjar'] ?? '';
+          return ContributionEditWordPage(
+            wordId: wordId,
+            wordBanjar: Uri.decodeComponent(banjar),
+          );
+        },
+      ),
       // Admin panel (nested)
       GoRoute(
         path: Routes.adminPanel,

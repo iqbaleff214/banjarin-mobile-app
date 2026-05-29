@@ -27,6 +27,12 @@ class Routes {
   static const myContributions = '/profil/kontribusi';
   static const contributionDetail = '/profil/kontribusi/:id';
 
+  // Contribution forms
+  static const contributionNewWord = '/kontribusi/kata-baru';
+  static const contributionNewDefinition = '/kontribusi/definisi-baru';
+  static const contributionNewExample = '/kontribusi/contoh-baru';
+  static const contributionEditWord = '/kontribusi/ubah-kata';
+
   // Admin
   static const adminPanel = '/admin';
   static const adminWords = '/admin/words';

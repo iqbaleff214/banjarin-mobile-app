@@ -79,6 +79,9 @@ class _WordDetailPageState extends State<WordDetailPage>
               ],
             ),
           ),
+          floatingActionButton: state is WordDetailLoaded
+              ? _ContributeFAB(word: state.word, context: context)
+              : null,
           body: switch (state) {
             WordDetailLoading() || WordDetailInitial() => const Center(
                 child: CircularProgressIndicator(),
@@ -314,6 +317,119 @@ class _KomentarTab extends StatelessWidget {
         ),
         CommentInput(wordId: wordId, isAuthenticated: isAuth),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Contribute FAB
+// ---------------------------------------------------------------------------
+
+class _ContributeFAB extends StatelessWidget {
+  final Word word;
+  final BuildContext context;
+
+  const _ContributeFAB({required this.word, required this.context});
+
+  @override
+  Widget build(BuildContext outerContext) {
+    final authState = outerContext.watch<AuthBloc>().state;
+    final isAuth = authState is Authenticated;
+    if (!isAuth) return const SizedBox.shrink();
+
+    return FloatingActionButton(
+      key: const Key('contribute_fab'),
+      onPressed: () => _showBottomSheet(outerContext),
+      tooltip: 'Kontribusi',
+      child: const Icon(Icons.add),
+    );
+  }
+
+  void _showBottomSheet(BuildContext ctx) {
+    showModalBottomSheet<void>(
+      context: ctx,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Kontribusi untuk "${word.banjar}"',
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              _OptionTile(
+                icon: Icons.add_box_outlined,
+                label: 'Kontribusikan kata baru',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  ctx.push(Routes.contributionNewWord);
+                },
+              ),
+              _OptionTile(
+                icon: Icons.menu_book_outlined,
+                label: 'Tambah definisi',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  ctx.push(
+                    '${Routes.contributionNewDefinition}'
+                    '?wordId=${word.id}&wordBanjar=${Uri.encodeComponent(word.banjar)}',
+                  );
+                },
+              ),
+              _OptionTile(
+                icon: Icons.format_quote_outlined,
+                label: 'Tambah contoh kalimat',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  ctx.push(
+                    '${Routes.contributionNewExample}'
+                    '?wordId=${word.id}&wordBanjar=${Uri.encodeComponent(word.banjar)}',
+                  );
+                },
+              ),
+              _OptionTile(
+                icon: Icons.edit_outlined,
+                label: 'Usulkan perbaikan kata',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  ctx.push(
+                    '${Routes.contributionEditWord}'
+                    '?wordId=${word.id}&wordBanjar=${Uri.encodeComponent(word.banjar)}',
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _OptionTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary),
+      title: Text(label),
+      onTap: onTap,
     );
   }
 }

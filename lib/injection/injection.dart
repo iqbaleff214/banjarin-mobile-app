@@ -64,6 +64,14 @@ import '../features/ai/data/repositories/ai_repository_impl.dart';
 import '../features/ai/domain/repositories/ai_repository.dart';
 import '../features/ai/domain/usecases/translate_banjar.dart';
 import '../features/ai/presentation/bloc/translate_bloc.dart';
+import '../features/community/data/datasources/contribution_remote_data_source.dart';
+import '../features/community/data/repositories/contribution_repository_impl.dart';
+import '../features/community/domain/repositories/contribution_repository.dart';
+import '../features/community/domain/usecases/get_contribution_detail.dart';
+import '../features/community/domain/usecases/get_contributions.dart';
+import '../features/community/domain/usecases/submit_contribution.dart';
+import '../features/community/domain/usecases/withdraw_contribution.dart';
+import '../features/community/presentation/bloc/contribution_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -278,5 +286,42 @@ Future<void> initDependencies() async {
   // ---------------------------------------------------------------------------
   sl.registerFactory(
     () => TranslateBloc(translateBanjar: sl<TranslateBanjar>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Community — Contributions data layer
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton<ContributionRemoteDataSource>(
+    () => ContributionRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<ContributionRepository>(
+    () => ContributionRepositoryImpl(remote: sl<ContributionRemoteDataSource>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Community — Contributions use cases
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton(
+    () => SubmitContribution(sl<ContributionRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetContributions(sl<ContributionRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetContributionDetail(sl<ContributionRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => WithdrawContribution(sl<ContributionRepository>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Community — ContributionBloc
+  // ---------------------------------------------------------------------------
+  sl.registerFactory(
+    () => ContributionBloc(
+      submit: sl<SubmitContribution>(),
+      getContributions: sl<GetContributions>(),
+      withdraw: sl<WithdrawContribution>(),
+    ),
   );
 }
