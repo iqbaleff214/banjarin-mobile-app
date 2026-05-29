@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 
+import '../core/network/connectivity_checker.dart';
 import '../core/network/dio_client.dart';
+import '../core/storage/onboarding_storage.dart';
 import '../core/network/token_interceptor.dart';
 import '../core/storage/hive_local_cache.dart';
 import '../core/storage/local_cache.dart';
@@ -110,6 +112,8 @@ Future<void> initDependencies() async {
   final hiveCache = await HiveLocalCache.create();
   sl.registerSingleton<LocalCache>(hiveCache);
   sl.registerSingleton<TokenStorage>(const SecureTokenStorage());
+  sl.registerSingleton<ConnectivityChecker>(ConnectivityCheckerImpl());
+  sl.registerSingleton<OnboardingStorage>(OnboardingStorage());
 
   // ---------------------------------------------------------------------------
   // Core — Network
@@ -196,6 +200,7 @@ Future<void> initDependencies() async {
     () => WordRepositoryImpl(
       remote: sl<WordRemoteDataSource>(),
       local: sl<WordLocalDataSource>(),
+      connectivity: sl<ConnectivityChecker>(),
     ),
   );
 

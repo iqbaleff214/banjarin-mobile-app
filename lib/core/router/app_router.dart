@@ -16,6 +16,7 @@ import '../../features/admin/presentation/pages/admin_ai_request_detail_page.dar
 import '../../features/admin/presentation/pages/admin_ai_requests_page.dart';
 import '../../features/admin/presentation/pages/admin_word_list_page.dart';
 import '../../features/ai/presentation/pages/terjemah_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/community/presentation/pages/contribution_edit_word_page.dart';
 import '../../features/community/presentation/pages/contribution_new_definition_page.dart';
 import '../../features/community/presentation/pages/contribution_new_example_page.dart';
@@ -62,14 +63,14 @@ class _PlaceholderPage extends StatelessWidget {
 // Router factory
 // ---------------------------------------------------------------------------
 
-GoRouter createRouter() {
+GoRouter createRouter({String? initialLocation}) {
   return GoRouter(
-    initialLocation: Routes.home,
+    initialLocation: initialLocation ?? Routes.home,
     debugLogDiagnostics: false,
     routes: [
       GoRoute(
         path: Routes.onboarding,
-        builder: (_, _) => const _PlaceholderPage('Onboarding'),
+        builder: (_, _) => const OnboardingPage(),
       ),
 
       // Main shell with bottom navigation

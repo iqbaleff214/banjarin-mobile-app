@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../../identity/presentation/bloc/auth_bloc.dart';
+import '../../../identity/presentation/bloc/auth_state.dart';
 
 import '../../domain/entities/sort_words.dart';
 import '../../domain/entities/word_class.dart';
@@ -205,18 +208,14 @@ class _WordList extends StatelessWidget {
 class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.search_off, size: 64, color: Colors.grey),
-          const SizedBox(height: 12),
-          Text(
-            'Tidak ada kata ditemukan',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ],
-      ),
+    final isAuth = context.watch<AuthBloc>().state is Authenticated;
+    return EmptyState(
+      icon: Icons.search_off,
+      message: 'Tidak ada kata ditemukan',
+      ctaText: isAuth ? 'Kontribusikan kata ini' : 'Masuk untuk berkontribusi',
+      onCta: isAuth
+          ? () => context.push(Routes.contributionNewWord)
+          : () => context.push(Routes.login),
     );
   }
 }

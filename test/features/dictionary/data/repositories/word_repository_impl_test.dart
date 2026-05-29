@@ -1,5 +1,6 @@
 import 'package:banjarin/core/error/exceptions.dart';
 import 'package:banjarin/core/error/failures.dart';
+import 'package:banjarin/core/network/connectivity_checker.dart';
 import 'package:banjarin/core/usecase/paginated_result.dart';
 import 'package:banjarin/features/dictionary/data/datasources/word_local_data_source.dart';
 import 'package:banjarin/features/dictionary/data/datasources/word_remote_data_source.dart';
@@ -15,6 +16,7 @@ import 'package:mocktail/mocktail.dart';
 class MockWordRemoteDataSource extends Mock implements WordRemoteDataSource {}
 
 class MockWordLocalDataSource extends Mock implements WordLocalDataSource {}
+class MockConnectivityChecker extends Mock implements ConnectivityChecker {}
 
 void main() {
   late MockWordRemoteDataSource mockRemote;
@@ -43,7 +45,9 @@ void main() {
   setUp(() {
     mockRemote = MockWordRemoteDataSource();
     mockLocal = MockWordLocalDataSource();
-    repository = WordRepositoryImpl(remote: mockRemote, local: mockLocal);
+    final mockConn = MockConnectivityChecker();
+    when(() => mockConn.isOnline()).thenAnswer((_) async => true);
+    repository = WordRepositoryImpl(remote: mockRemote, local: mockLocal, connectivity: mockConn);
     registerFallbackValue(RequestOptions(path: '/'));
     registerFallbackValue(const WordListParams());
     registerFallbackValue(const SearchParams(query: 'test'));

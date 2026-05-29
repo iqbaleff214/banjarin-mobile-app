@@ -40,8 +40,13 @@ dependencies:
   # Stream utilities (debounce for SearchBloc)
   stream_transform: ^2.1.0
 
+  # Connectivity checking (offline detection)
+  connectivity_plus: ^6.1.0
+
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   mocktail: ^1.0.4

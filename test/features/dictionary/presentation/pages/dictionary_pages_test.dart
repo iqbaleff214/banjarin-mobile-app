@@ -9,6 +9,9 @@ import 'package:banjarin/features/dictionary/presentation/bloc/search_state.dart
 import 'package:banjarin/features/dictionary/presentation/bloc/word_list_bloc.dart';
 import 'package:banjarin/features/dictionary/presentation/bloc/word_list_event.dart';
 import 'package:banjarin/features/dictionary/presentation/bloc/word_list_state.dart';
+import 'package:banjarin/features/identity/presentation/bloc/auth_bloc.dart';
+import 'package:banjarin/features/identity/presentation/bloc/auth_event.dart';
+import 'package:banjarin/features/identity/presentation/bloc/auth_state.dart';
 import 'package:banjarin/features/dictionary/presentation/pages/beranda_page.dart';
 import 'package:banjarin/features/dictionary/presentation/pages/cari_page.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -20,6 +23,8 @@ import 'package:mocktail/mocktail.dart';
 
 class MockWordListBloc extends MockBloc<WordListEvent, WordListState>
     implements WordListBloc {}
+
+class MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
 
 class MockSearchBloc extends MockBloc<SearchEvent, SearchState>
     implements SearchBloc {}
@@ -56,16 +61,26 @@ void main() {
   // -------------------------------------------------------------------------
   group('BerandaPage', () {
     late MockWordListBloc mockBloc;
+    late MockAuthBloc mockAuthBloc;
 
-    setUp(() => mockBloc = MockWordListBloc());
+    setUp(() {
+      mockBloc = MockWordListBloc();
+      mockAuthBloc = MockAuthBloc();
+    });
 
-    Widget buildBeranda() => BlocProvider<WordListBloc>.value(
-          value: mockBloc,
-          child: MaterialApp.router(
-            theme: AppTheme.light,
-            routerConfig: _makeRouter(const BerandaPage()),
-          ),
-        );
+    Widget buildBeranda() {
+      when(() => mockAuthBloc.state).thenReturn(const Unauthenticated());
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider<WordListBloc>.value(value: mockBloc),
+          BlocProvider<AuthBloc>.value(value: mockAuthBloc),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light,
+          routerConfig: _makeRouter(const BerandaPage()),
+        ),
+      );
+    }
 
     testWidgets('renders word cards when WordListBloc emits Loaded state',
         (tester) async {

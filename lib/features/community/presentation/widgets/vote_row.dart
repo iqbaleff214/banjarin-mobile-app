@@ -96,26 +96,33 @@ class _VoteButton extends StatelessWidget {
     required this.onTap,
   });
 
+  String get _semanticsLabel =>
+      icon == Icons.arrow_upward ? 'Upvote' : 'Downvote';
+
   @override
   Widget build(BuildContext context) {
     final color = isActive ? activeColor : Colors.grey;
-    return InkWell(
-      onTap: isLoading ? null : onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: color),
-            if (showCount) ...[
-              const SizedBox(width: 2),
-              Text(
-                '$count',
-                style: TextStyle(fontSize: 12, color: color),
-              ),
+    return Semantics(
+      label: _semanticsLabel,
+      button: true,
+      child: InkWell(
+        onTap: isLoading ? null : onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 16, color: color),
+              if (showCount) ...[
+                const SizedBox(width: 2),
+                Text(
+                  '$count',
+                  style: TextStyle(fontSize: 12, color: color),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

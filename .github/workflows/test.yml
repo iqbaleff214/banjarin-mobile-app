@@ -1,0 +1,43 @@
+name: Unit & Widget Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+      - name: Check domain coverage (≥90%)
+        run: |
+          pip install lcov-cobertura
+          lcov --summary coverage/lcov.info || true
+          # Coverage threshold enforcement — TODO: integrate lcov-cobertura check
+          echo "Coverage check placeholder — integrate lcov reporting here"

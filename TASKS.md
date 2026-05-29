@@ -1467,7 +1467,7 @@
 
 ---
 
-- [ ] **TASK-062: Offline Cache Strategy Enforcement**
+- [x] **TASK-062: Offline Cache Strategy Enforcement**
 
   **Description:** Implement and validate the cache strategies from PRD §9 across all features. Ensure stale data is displayed with a refresh indicator when the device is offline.
 
@@ -1491,7 +1491,7 @@
 
 ---
 
-- [ ] **TASK-063: Skeleton Loaders for All Screens**
+- [x] **TASK-063: Skeleton Loaders for All Screens**
 
   **Description:** Ensure every list and detail screen has a skeleton loader matching the actual content layout. No blank screens or spinners-only states.
 
@@ -1510,7 +1510,7 @@
 
 ---
 
-- [ ] **TASK-064: Empty States for All Lists**
+- [x] **TASK-064: Empty States for All Lists**
 
   **Description:** Every list screen with a potentially-empty result must have a tailored empty state per PRD §6.6.
 
@@ -1533,7 +1533,7 @@
 
 ---
 
-- [ ] **TASK-065: Global Error State Handling**
+- [x] **TASK-065: Global Error State Handling**
 
   **Description:** Standardize all error states across the app per PRD §6.5.
 
@@ -1558,7 +1558,7 @@
 
 ---
 
-- [ ] **TASK-066: Onboarding Screen**
+- [x] **TASK-066: Onboarding Screen**
 
   **Expected Output:**
   - `lib/features/onboarding/presentation/pages/onboarding_page.dart`
@@ -1579,7 +1579,7 @@
 
 ---
 
-- [ ] **TASK-067: Dark Mode and Theme Switching**
+- [x] **TASK-067: Dark Mode and Theme Switching**
 
   **Description:** Validate full dark mode support across all screens. Confirm system-aware theme switching works correctly.
 
@@ -1597,7 +1597,7 @@
 
 ---
 
-- [ ] **TASK-068: Accessibility Audit**
+- [x] **TASK-068: Accessibility Audit**
 
   **Description:** Ensure the app meets WCAG AA standards and is screen-reader compatible per PRD §6.7.
 
@@ -1614,7 +1614,7 @@
 
 ---
 
-- [ ] **TASK-069: Integration Tests**
+- [x] **TASK-069: Integration Tests**
 
   **Description:** End-to-end flows against staging API per PRD §14.4.
 
@@ -1643,7 +1643,7 @@
 
 ---
 
-- [ ] **TASK-070: CI Pipeline Setup**
+- [x] **TASK-070: CI Pipeline Setup**
 
   **Description:** Configure GitHub Actions (or equivalent) for automated testing and coverage enforcement per PRD §14.7.
 
@@ -1662,7 +1662,7 @@
 
 ---
 
-- [ ] **TASK-071: Deep Link Testing and Final End-to-End Verification**
+- [x] **TASK-071: Deep Link Testing and Final End-to-End Verification**
 
   **Description:** Validate all three deep links work end-to-end on physical devices (Android + iOS).
 

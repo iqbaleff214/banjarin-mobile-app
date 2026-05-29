@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/api_error_mapper.dart';
+import '../../../../core/network/connectivity_checker.dart';
 import '../../../../core/usecase/paginated_result.dart';
 import '../../domain/entities/definition.dart';
 import '../../domain/entities/example.dart';
@@ -18,12 +19,15 @@ import '../models/word_summary_model.dart';
 class WordRepositoryImpl implements WordRepository {
   final WordRemoteDataSource _remote;
   final WordLocalDataSource _local;
+  final ConnectivityChecker _connectivity;
 
   WordRepositoryImpl({
     required WordRemoteDataSource remote,
     required WordLocalDataSource local,
+    required ConnectivityChecker connectivity,
   })  : _remote = remote,
-        _local = local;
+        _local = local,
+        _connectivity = connectivity;
 
   Either<Failure, T> _mapDioException<T>(DioException e) {
     final error = e.error;
@@ -57,6 +61,11 @@ class WordRepositoryImpl implements WordRepository {
           perPage: params.perPage,
           total: models.length,
         ));
+      }
+      // If offline and no cache, return failure early
+      final online = await _connectivity.isOnline();
+      if (!online) {
+        return const Left(NetworkFailure('Tidak ada koneksi internet.'));
       }
     }
 
