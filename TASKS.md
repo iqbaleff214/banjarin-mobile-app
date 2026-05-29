@@ -1108,7 +1108,7 @@
 
 ---
 
-- [ ] **TASK-046: Admin Role Guard**
+- [x] **TASK-046: Admin Role Guard**
 
   **Description:** Route-level guard that redirects non-admin users away from all `/admin/*` routes. Widget-level guard for admin-only UI elements.
 
@@ -1127,7 +1127,7 @@
 
 ---
 
-- [ ] **TASK-047: Admin Word Use Cases and Data Layer**
+- [x] **TASK-047: Admin Word Use Cases and Data Layer**
 
   **API:** `GET /admin/words`, `POST /admin/words`, `PATCH /admin/words/{id}`, `DELETE /admin/words/{id}`
 
@@ -1155,7 +1155,7 @@
 
 ---
 
-- [ ] **TASK-048: Admin User Management Use Cases and Data Layer**
+- [x] **TASK-048: Admin User Management Use Cases and Data Layer**
 
   **API:** `GET /admin/users`, `GET /admin/users/{id}`, `PATCH /admin/users/{id}/ban`, `PATCH /admin/users/{id}/unban`, `PATCH /admin/users/{id}/role`
 
@@ -1179,7 +1179,7 @@
 
 ---
 
-- [ ] **TASK-049: Admin Moderation Use Cases and Data Layer**
+- [x] **TASK-049: Admin Moderation Use Cases and Data Layer**
 
   **API:** `GET /admin/moderation/queue`, `GET /admin/moderation/flags`, `GET /admin/moderation/stats`, `PATCH /contributions/{id}/approve`, `PATCH /contributions/{id}/reject`
 
@@ -1206,7 +1206,7 @@
 
 ---
 
-- [ ] **TASK-050: Admin Blocs (AdminWordBloc, UserMgmtBloc, ModerationBloc)**
+- [x] **TASK-050: Admin Blocs (AdminWordBloc, UserMgmtBloc, ModerationBloc)**
 
   **Expected Output:**
   - `lib/features/admin/presentation/bloc/admin_word_bloc.dart`
@@ -1230,7 +1230,7 @@
 
 ---
 
-- [ ] **TASK-051: Admin Dashboard Page**
+- [x] **TASK-051: Admin Dashboard Page**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_dashboard_page.dart`
@@ -1248,7 +1248,7 @@
 
 ---
 
-- [ ] **TASK-052: Admin Word Management Pages**
+- [x] **TASK-052: Admin Word Management Pages**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_word_list_page.dart`
@@ -1270,7 +1270,7 @@
 
 ---
 
-- [ ] **TASK-053: Admin Moderation Queue and Contribution Review Pages**
+- [x] **TASK-053: Admin Moderation Queue and Contribution Review Pages**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_moderation_queue_page.dart`
@@ -1289,7 +1289,7 @@
 
 ---
 
-- [ ] **TASK-054: Admin Flagged Comments Page**
+- [x] **TASK-054: Admin Flagged Comments Page**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_flagged_comments_page.dart`
@@ -1304,7 +1304,7 @@
 
 ---
 
-- [ ] **TASK-055: Admin User Management Pages**
+- [x] **TASK-055: Admin User Management Pages**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_user_list_page.dart`

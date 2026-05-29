@@ -5,6 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/community/presentation/bloc/comment_bloc.dart';
 import '../../features/community/presentation/bloc/vote_bloc.dart';
+import '../../features/admin/presentation/pages/admin_contribution_review_page.dart';
+import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../../features/admin/presentation/pages/admin_flagged_comments_page.dart';
+import '../../features/admin/presentation/pages/admin_moderation_queue_page.dart';
+import '../../features/admin/presentation/pages/admin_user_detail_page.dart';
+import '../../features/admin/presentation/pages/admin_user_list_page.dart';
+import '../../features/admin/presentation/pages/admin_word_form_page.dart';
+import '../../features/admin/presentation/pages/admin_word_list_page.dart';
 import '../../features/ai/presentation/pages/terjemah_page.dart';
 import '../../features/community/presentation/pages/contribution_edit_word_page.dart';
 import '../../features/community/presentation/pages/contribution_new_definition_page.dart';
@@ -216,44 +224,42 @@ GoRouter createRouter() {
       // Admin panel (nested)
       GoRoute(
         path: Routes.adminPanel,
-        builder: (_, _) => const _PlaceholderPage('Panel Admin'),
+        builder: (_, _) => const AdminDashboardPage(),
         routes: [
           GoRoute(
             path: 'words',
-            builder: (_, _) => const _PlaceholderPage('Manajemen Kata'),
+            builder: (_, _) => const AdminWordListPage(),
           ),
           GoRoute(
             path: 'words/create',
-            builder: (_, _) => const _PlaceholderPage('Tambah Kata'),
+            builder: (_, _) => const AdminWordFormPage(),
           ),
           GoRoute(
             path: 'words/:id/edit',
-            builder: (context, state) => _PlaceholderPage(
-              'Edit Kata: ${state.pathParameters['id']}',
-            ),
+            builder: (_, _) => const AdminWordFormPage(),
           ),
           GoRoute(
             path: 'moderasi/antrian',
-            builder: (_, _) => const _PlaceholderPage('Antrian Moderasi'),
+            builder: (_, _) => const AdminModerationQueuePage(),
           ),
           GoRoute(
             path: 'moderasi/kontribusi/:id',
-            builder: (context, state) => _PlaceholderPage(
-              'Review: ${state.pathParameters['id']}',
+            builder: (context, state) => AdminContributionReviewPage(
+              contributionId: state.pathParameters['id']!,
             ),
           ),
           GoRoute(
             path: 'moderasi/komentar',
-            builder: (_, _) => const _PlaceholderPage('Komentar Ditandai'),
+            builder: (_, _) => const AdminFlaggedCommentsPage(),
           ),
           GoRoute(
             path: 'pengguna',
-            builder: (_, _) => const _PlaceholderPage('Manajemen Pengguna'),
+            builder: (_, _) => const AdminUserListPage(),
           ),
           GoRoute(
             path: 'pengguna/:id',
-            builder: (context, state) => _PlaceholderPage(
-              'Pengguna: ${state.pathParameters['id']}',
+            builder: (context, state) => AdminUserDetailPage(
+              userId: state.pathParameters['id']!,
             ),
           ),
           GoRoute(

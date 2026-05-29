@@ -64,6 +64,25 @@ import '../features/ai/data/repositories/ai_repository_impl.dart';
 import '../features/ai/domain/repositories/ai_repository.dart';
 import '../features/ai/domain/usecases/translate_banjar.dart';
 import '../features/ai/presentation/bloc/translate_bloc.dart';
+import '../features/admin/data/datasources/admin_remote_data_source.dart';
+import '../features/admin/data/repositories/admin_repository_impl.dart';
+import '../features/admin/domain/repositories/admin_repository.dart';
+import '../features/admin/domain/usecases/approve_contribution.dart';
+import '../features/admin/domain/usecases/ban_user.dart' as ban_uc;
+import '../features/admin/domain/usecases/change_user_role.dart';
+import '../features/admin/domain/usecases/create_word.dart' as admin_cw;
+import '../features/admin/domain/usecases/delete_word.dart' as admin_dw;
+import '../features/admin/domain/usecases/get_admin_users.dart';
+import '../features/admin/domain/usecases/get_admin_words.dart';
+import '../features/admin/domain/usecases/get_flagged_comments.dart';
+import '../features/admin/domain/usecases/get_moderation_queue.dart';
+import '../features/admin/domain/usecases/get_moderation_stats.dart';
+import '../features/admin/domain/usecases/reject_contribution.dart' as admin_rc;
+import '../features/admin/domain/usecases/unban_user.dart';
+import '../features/admin/domain/usecases/update_word.dart';
+import '../features/admin/presentation/bloc/admin_word_bloc.dart';
+import '../features/admin/presentation/bloc/moderation_bloc.dart';
+import '../features/admin/presentation/bloc/user_mgmt_bloc.dart';
 import '../features/community/data/datasources/contribution_remote_data_source.dart';
 import '../features/community/data/repositories/contribution_repository_impl.dart';
 import '../features/community/domain/repositories/contribution_repository.dart';
@@ -286,6 +305,62 @@ Future<void> initDependencies() async {
   // ---------------------------------------------------------------------------
   sl.registerFactory(
     () => TranslateBloc(translateBanjar: sl<TranslateBanjar>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Admin — Data layer
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton<AdminRemoteDataSource>(
+    () => AdminRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<AdminRepository>(
+    () => AdminRepositoryImpl(remote: sl<AdminRemoteDataSource>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // Admin — Use cases
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton(() => GetAdminWords(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => admin_cw.CreateWord(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => UpdateWord(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => admin_dw.DeleteWord(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetAdminUsers(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => ban_uc.BanUser(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => UnbanUser(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => ChangeUserRole(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetModerationQueue(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetFlaggedComments(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetModerationStats(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => ApproveContribution(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => admin_rc.RejectContribution(sl<AdminRepository>()));
+
+  // ---------------------------------------------------------------------------
+  // Admin — Blocs
+  // ---------------------------------------------------------------------------
+  sl.registerFactory(
+    () => AdminWordBloc(
+      getWords: sl<GetAdminWords>(),
+      createWord: sl<admin_cw.CreateWord>(),
+      updateWord: sl<UpdateWord>(),
+      deleteWord: sl<admin_dw.DeleteWord>(),
+    ),
+  );
+  sl.registerFactory(
+    () => UserMgmtBloc(
+      getUsers: sl<GetAdminUsers>(),
+      banUser: sl<ban_uc.BanUser>(),
+      unbanUser: sl<UnbanUser>(),
+      changeRole: sl<ChangeUserRole>(),
+    ),
+  );
+  sl.registerFactory(
+    () => ModerationBloc(
+      getQueue: sl<GetModerationQueue>(),
+      getFlags: sl<GetFlaggedComments>(),
+      getStats: sl<GetModerationStats>(),
+      approve: sl<ApproveContribution>(),
+      reject: sl<admin_rc.RejectContribution>(),
+    ),
   );
 
   // ---------------------------------------------------------------------------
