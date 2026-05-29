@@ -37,6 +37,9 @@ dependencies:
   # Dependency injection
   get_it: ^7.7.0
 
+  # Stream utilities (debounce for SearchBloc)
+  stream_transform: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../features/dictionary/presentation/bloc/word_detail_bloc.dart';
+import '../../features/dictionary/presentation/pages/beranda_page.dart';
+import '../../features/dictionary/presentation/pages/cari_page.dart';
+import '../../features/dictionary/presentation/pages/word_detail_page.dart';
 import '../../features/identity/domain/usecases/forgot_password.dart';
 import '../../features/identity/domain/usecases/reset_password.dart';
 import '../../features/identity/domain/usecases/verify_email.dart';
@@ -58,11 +64,11 @@ GoRouter createRouter() {
         routes: [
           GoRoute(
             path: Routes.home,
-            builder: (_, _) => const _PlaceholderPage('Beranda'),
+            builder: (_, _) => const BerandaPage(),
           ),
           GoRoute(
             path: Routes.search,
-            builder: (_, _) => const _PlaceholderPage('Cari'),
+            builder: (_, _) => const CariPage(),
           ),
           GoRoute(
             path: Routes.translate,
@@ -79,12 +85,16 @@ GoRouter createRouter() {
         ],
       ),
 
-      // Word detail (outside shell)
+      // Word detail (outside shell — fresh WordDetailBloc per word)
       GoRoute(
         path: Routes.wordDetail,
-        builder: (context, state) => _PlaceholderPage(
-          'Kata: ${state.pathParameters['id']}',
-        ),
+        builder: (context, state) {
+          final wordId = state.pathParameters['id']!;
+          return BlocProvider<WordDetailBloc>(
+            create: (_) => sl<WordDetailBloc>(),
+            child: WordDetailPage(wordId: wordId),
+          );
+        },
       ),
 
       // Auth routes

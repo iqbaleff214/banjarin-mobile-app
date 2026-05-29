@@ -445,7 +445,7 @@
 
 ---
 
-- [ ] **TASK-019: Word, Definition, Example, and RelatedWord Entities**
+- [x] **TASK-019: Word, Definition, Example, and RelatedWord Entities**
 
   **Expected Output:**
   - `lib/features/dictionary/domain/entities/word.dart`
@@ -471,7 +471,7 @@
 
 ---
 
-- [ ] **TASK-020: WordRepository Interface**
+- [x] **TASK-020: WordRepository Interface**
 
   **Expected Output:**
   - `lib/features/dictionary/domain/repositories/word_repository.dart`
@@ -488,7 +488,7 @@
 
 ---
 
-- [ ] **TASK-021: GetWordList and SearchWords Use Cases**
+- [x] **TASK-021: GetWordList and SearchWords Use Cases**
 
   **Expected Output:**
   - `lib/features/dictionary/domain/usecases/get_word_list.dart`
@@ -507,7 +507,7 @@
 
 ---
 
-- [ ] **TASK-022: GetWordDetail, GetDefinitions, GetExamples, GetRelatedWords Use Cases**
+- [x] **TASK-022: GetWordDetail, GetDefinitions, GetExamples, GetRelatedWords Use Cases**
 
   **Expected Output:**
   - `lib/features/dictionary/domain/usecases/get_word_detail.dart`
@@ -528,7 +528,7 @@
 
 ---
 
-- [ ] **TASK-023: Dictionary Data Layer (Models + Data Sources + Repository Impl)**
+- [x] **TASK-023: Dictionary Data Layer (Models + Data Sources + Repository Impl)**
 
   **API:** `GET /words`, `GET /words/search`, `GET /words/{id}`, `GET /words/{id}/definitions`, `GET /words/{id}/examples`, `GET /words/{id}/related`
 
@@ -560,7 +560,7 @@
 
 ---
 
-- [ ] **TASK-024: WordListBloc and SearchBloc**
+- [x] **TASK-024: WordListBloc and SearchBloc**
 
   **Expected Output:**
   - `lib/features/dictionary/presentation/bloc/word_list_bloc.dart`
@@ -586,7 +586,7 @@
 
 ---
 
-- [ ] **TASK-025: WordDetailBloc**
+- [x] **TASK-025: WordDetailBloc**
 
   **Description:** Manages state for the Word Detail screen — loads word, definitions, examples, related words, and comments. Vote and bookmark state handled here; delegated to VoteBloc/BookmarkBloc in Phase 3.
 
@@ -606,7 +606,7 @@
 
 ---
 
-- [ ] **TASK-026: Reusable Dictionary Widgets**
+- [x] **TASK-026: Reusable Dictionary Widgets**
 
   **Description:** Build the core reusable display widgets used across Beranda, Search, and Word Detail.
 
@@ -637,7 +637,7 @@
 
 ---
 
-- [ ] **TASK-027: Beranda Page, Cari Page, and Word Detail Page (Structure)**
+- [x] **TASK-027: Beranda Page, Cari Page, and Word Detail Page (Structure)**
 
   **Description:** Build the three primary dictionary screens. At this stage: no vote/bookmark/comment interactions (Phase 3), no FAB (Phase 5). Focus on read-only display.
 
