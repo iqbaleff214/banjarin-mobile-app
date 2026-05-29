@@ -59,6 +59,11 @@ import '../features/community/domain/usecases/remove_vote.dart';
 import '../features/community/presentation/bloc/bookmark_bloc.dart';
 import '../features/community/presentation/bloc/comment_bloc.dart';
 import '../features/community/presentation/bloc/vote_bloc.dart';
+import '../features/ai/data/datasources/ai_remote_data_source.dart';
+import '../features/ai/data/repositories/ai_repository_impl.dart';
+import '../features/ai/domain/repositories/ai_repository.dart';
+import '../features/ai/domain/usecases/translate_banjar.dart';
+import '../features/ai/presentation/bloc/translate_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -251,5 +256,27 @@ Future<void> initDependencies() async {
       deleteComment: sl<DeleteComment>(),
       flagComment: sl<FlagComment>(),
     ),
+  );
+
+  // ---------------------------------------------------------------------------
+  // AI — Data layer
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton<AIRemoteDataSource>(
+    () => AIRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<AIRepository>(
+    () => AIRepositoryImpl(remoteDataSource: sl<AIRemoteDataSource>()),
+  );
+
+  // ---------------------------------------------------------------------------
+  // AI — Use cases
+  // ---------------------------------------------------------------------------
+  sl.registerLazySingleton(() => TranslateBanjar(sl<AIRepository>()));
+
+  // ---------------------------------------------------------------------------
+  // AI — Blocs
+  // ---------------------------------------------------------------------------
+  sl.registerFactory(
+    () => TranslateBloc(translateBanjar: sl<TranslateBanjar>()),
   );
 }

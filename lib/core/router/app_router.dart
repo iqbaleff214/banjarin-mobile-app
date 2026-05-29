@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/community/presentation/bloc/comment_bloc.dart';
 import '../../features/community/presentation/bloc/vote_bloc.dart';
+import '../../features/ai/presentation/pages/terjemah_page.dart';
 import '../../features/community/presentation/pages/simpanan_page.dart';
 import '../../features/dictionary/presentation/bloc/word_detail_bloc.dart';
 import '../../features/dictionary/presentation/pages/beranda_page.dart';
@@ -75,7 +76,7 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: Routes.translate,
-            builder: (_, _) => const _PlaceholderPage('Terjemah'),
+            builder: (_, _) => const TerjemahPage(),
           ),
           GoRoute(
             path: Routes.bookmarks,

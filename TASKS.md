@@ -884,7 +884,7 @@
 
 ---
 
-- [ ] **TASK-037: TranslationResult Entity, AIRepository Interface, and TranslateBanjar Use Case**
+- [x] **TASK-037: TranslationResult Entity, AIRepository Interface, and TranslateBanjar Use Case**
 
   **Expected Output:**
   - `lib/features/ai/domain/entities/translation_result.dart` — `original`, `translation`, `dialect`, `model`, `confidence` (enum: `high`/`medium`/`low`), `notes`
@@ -905,7 +905,7 @@
 
 ---
 
-- [ ] **TASK-038: AI Data Layer**
+- [x] **TASK-038: AI Data Layer**
 
   **API:** `POST /ai/translate`
 
@@ -928,7 +928,7 @@
 
 ---
 
-- [ ] **TASK-039: TranslateBloc**
+- [x] **TASK-039: TranslateBloc**
 
   **Expected Output:**
   - `lib/features/ai/presentation/bloc/translate_bloc.dart`
@@ -946,7 +946,7 @@
 
 ---
 
-- [ ] **TASK-040: Terjemah Page**
+- [x] **TASK-040: Terjemah Page**
 
   **Expected Output:**
   - `lib/features/ai/presentation/pages/terjemah_page.dart`
