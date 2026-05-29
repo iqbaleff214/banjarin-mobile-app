@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../community/domain/entities/contribution.dart';
+import '../../domain/entities/ai_request.dart';
+import '../bloc/ai_request_bloc.dart';
+import '../bloc/ai_request_event.dart';
+import '../bloc/ai_request_state.dart';
 import '../bloc/moderation_bloc.dart';
 import '../bloc/moderation_event.dart';
 import '../bloc/moderation_state.dart';
@@ -76,6 +81,7 @@ class _AdminContributionReviewPageState
                       contribution: contribution,
                       rejectNoteCtrl: _rejectNoteCtrl,
                       isProcessing: isProcessing,
+                      contributionId: widget.contributionId,
                       onApprove: () => context.read<ModerationBloc>().add(
                             ApproveContributionEvent(
                               contributionId: widget.contributionId,
@@ -105,6 +111,7 @@ class _ReviewBody extends StatelessWidget {
   final bool isProcessing;
   final VoidCallback onApprove;
   final VoidCallback onReject;
+  final String contributionId;
 
   const _ReviewBody({
     required this.contribution,
@@ -112,6 +119,7 @@ class _ReviewBody extends StatelessWidget {
     required this.isProcessing,
     required this.onApprove,
     required this.onReject,
+    required this.contributionId,
   });
 
   @override
@@ -178,8 +186,48 @@ class _ReviewBody extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(height: 16),
+          // AI Quality Check button
+          _QualityCheckButton(contributionId: contributionId),
         ],
       ),
+    );
+  }
+}
+
+class _QualityCheckButton extends StatelessWidget {
+  final String contributionId;
+  const _QualityCheckButton({required this.contributionId});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AIRequestBloc, AIRequestState>(
+      listener: (context, state) {
+        if (state is Triggered) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Quality check dikirim.'),
+              action: SnackBarAction(
+                label: 'Lihat',
+                onPressed: () => context.push(Routes.adminAiRequests),
+              ),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        return OutlinedButton.icon(
+          key: const Key('quality_check_button'),
+          icon: const Icon(Icons.fact_check_outlined, size: 16),
+          label: const Text('Quality Check AI'),
+          onPressed: state is Triggering
+              ? null
+              : () => context.read<AIRequestBloc>().add(TriggerAIEvent(
+                    type: AIRequestType.quality_check,
+                    contributionId: contributionId,
+                  )),
+        );
+      },
     );
   }
 }

@@ -1330,7 +1330,7 @@
 
 ---
 
-- [ ] **TASK-056: AIRequest Entity, Admin AI Use Cases**
+- [x] **TASK-056: AIRequest Entity, Admin AI Use Cases**
 
   **Expected Output:**
   - `lib/features/admin/domain/entities/ai_request.dart` — `id`, `type` (enum: `enrich_definition`/`suggest_example`/`suggest_related`/`quality_check`), `targetWordId`, `targetContributionId`, `model`, `status`, `reviewStatus`, `parsedOutput`, `createdAt`
@@ -1358,7 +1358,7 @@
 
 ---
 
-- [ ] **TASK-057: Admin AI Data Layer**
+- [x] **TASK-057: Admin AI Data Layer**
 
   **API:** `POST /admin/ai/enrich/{word_id}`, `POST /admin/ai/example/{word_id}`, `POST /admin/ai/related/{word_id}`, `POST /admin/ai/check/{contribution_id}`, `GET /admin/ai/requests`, `GET /admin/ai/requests/{id}`, `PATCH /admin/ai/requests/{id}/approve`, `PATCH /admin/ai/requests/{id}/reject`
 
@@ -1380,7 +1380,7 @@
 
 ---
 
-- [ ] **TASK-058: AIRequestBloc**
+- [x] **TASK-058: AIRequestBloc**
 
   **Expected Output:**
   - `lib/features/admin/presentation/bloc/ai_request_bloc.dart`
@@ -1400,7 +1400,7 @@
 
 ---
 
-- [ ] **TASK-059: Admin AI Request History Page**
+- [x] **TASK-059: Admin AI Request History Page**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_ai_requests_page.dart`
@@ -1418,7 +1418,7 @@
 
 ---
 
-- [ ] **TASK-060: Admin AI Request Detail Page**
+- [x] **TASK-060: Admin AI Request Detail Page**
 
   **Expected Output:**
   - `lib/features/admin/presentation/pages/admin_ai_request_detail_page.dart`
@@ -1442,7 +1442,7 @@
 
 ---
 
-- [ ] **TASK-061: Wire AI Trigger Buttons into Admin Word Management**
+- [x] **TASK-061: Wire AI Trigger Buttons into Admin Word Management**
 
   **Description:** Add "Pengayaan AI" action buttons to the Admin Word Detail screen (from TASK-052), enabling admins to trigger the three enrichment job types directly from the word context.
 

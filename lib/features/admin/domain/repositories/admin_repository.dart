@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/paginated_result.dart';
 import '../../../community/domain/entities/comment.dart';
 import '../../../community/domain/entities/contribution.dart';
+import '../entities/ai_request.dart';
 import '../../../dictionary/domain/entities/content_source.dart';
 import '../../../dictionary/domain/entities/word.dart';
 import '../../../dictionary/domain/entities/word_class.dart';
@@ -152,5 +153,43 @@ abstract class AdminRepository {
   Future<Either<Failure, Contribution>> rejectContribution({
     required String contributionId,
     required String note,
+  });
+
+  // AI Enrichment
+  Future<Either<Failure, AIRequest>> triggerEnrich({required String wordId});
+  Future<Either<Failure, AIRequest>> triggerExample({required String wordId});
+  Future<Either<Failure, AIRequest>> triggerRelated({required String wordId});
+  Future<Either<Failure, AIRequest>> runQualityCheck({
+    required String contributionId,
+  });
+  Future<Either<Failure, PaginatedResult<AIRequest>>> getAIRequests(
+    GetAIRequestsParams params,
+  );
+  Future<Either<Failure, AIRequest>> getAIRequestDetail({
+    required String requestId,
+  });
+  Future<Either<Failure, AIRequest>> approveAIRequest({
+    required String requestId,
+  });
+  Future<Either<Failure, AIRequest>> rejectAIRequest({
+    required String requestId,
+  });
+}
+
+// ─── AI Request Params ───────────────────────────────────────────────────────
+
+class GetAIRequestsParams {
+  final AIRequestType? type;
+  final AIRequestStatus? status;
+  final AIReviewStatus? reviewStatus;
+  final int page;
+  final int perPage;
+
+  const GetAIRequestsParams({
+    this.type,
+    this.status,
+    this.reviewStatus,
+    this.page = 1,
+    this.perPage = 20,
   });
 }

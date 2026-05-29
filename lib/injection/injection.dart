@@ -82,7 +82,16 @@ import '../features/admin/domain/usecases/unban_user.dart';
 import '../features/admin/domain/usecases/update_word.dart';
 import '../features/admin/presentation/bloc/admin_word_bloc.dart';
 import '../features/admin/presentation/bloc/moderation_bloc.dart';
+import '../features/admin/presentation/bloc/ai_request_bloc.dart';
 import '../features/admin/presentation/bloc/user_mgmt_bloc.dart';
+import '../features/admin/domain/usecases/approve_ai_request.dart' as ai_approve;
+import '../features/admin/domain/usecases/get_ai_requests.dart';
+import '../features/admin/domain/usecases/get_ai_request_detail.dart';
+import '../features/admin/domain/usecases/reject_ai_request.dart' as ai_reject;
+import '../features/admin/domain/usecases/run_quality_check.dart';
+import '../features/admin/domain/usecases/trigger_ai_enrich.dart';
+import '../features/admin/domain/usecases/trigger_ai_example.dart';
+import '../features/admin/domain/usecases/trigger_ai_related.dart';
 import '../features/community/data/datasources/contribution_remote_data_source.dart';
 import '../features/community/data/repositories/contribution_repository_impl.dart';
 import '../features/community/domain/repositories/contribution_repository.dart';
@@ -360,6 +369,25 @@ Future<void> initDependencies() async {
       getStats: sl<GetModerationStats>(),
       approve: sl<ApproveContribution>(),
       reject: sl<admin_rc.RejectContribution>(),
+    ),
+  );
+  sl.registerLazySingleton(() => TriggerAIEnrich(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => TriggerAIExample(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => TriggerAIRelated(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => RunQualityCheck(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetAIRequests(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => GetAIRequestDetail(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => ai_approve.ApproveAIRequest(sl<AdminRepository>()));
+  sl.registerLazySingleton(() => ai_reject.RejectAIRequest(sl<AdminRepository>()));
+  sl.registerFactory(
+    () => AIRequestBloc(
+      triggerEnrich: sl<TriggerAIEnrich>(),
+      triggerExample: sl<TriggerAIExample>(),
+      triggerRelated: sl<TriggerAIRelated>(),
+      runCheck: sl<RunQualityCheck>(),
+      getRequests: sl<GetAIRequests>(),
+      approve: sl<ai_approve.ApproveAIRequest>(),
+      reject: sl<ai_reject.RejectAIRequest>(),
     ),
   );
 

@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/admin/presentation/bloc/ai_request_bloc.dart';
 import 'features/admin/presentation/bloc/admin_word_bloc.dart';
 import 'features/admin/presentation/bloc/moderation_bloc.dart';
 import 'features/admin/presentation/bloc/user_mgmt_bloc.dart';
@@ -67,6 +68,9 @@ class BanjarinApp extends StatelessWidget {
         ),
         BlocProvider<ModerationBloc>(
           create: (_) => sl<ModerationBloc>(),
+        ),
+        BlocProvider<AIRequestBloc>(
+          create: (_) => sl<AIRequestBloc>(),
         ),
       ],
       child: MaterialApp.router(

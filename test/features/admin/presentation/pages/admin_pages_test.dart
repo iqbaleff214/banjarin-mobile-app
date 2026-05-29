@@ -31,10 +31,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:banjarin/features/admin/presentation/bloc/ai_request_bloc.dart';
+import 'package:banjarin/features/admin/presentation/bloc/ai_request_event.dart';
+import 'package:banjarin/features/admin/presentation/bloc/ai_request_state.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAdminWordBloc extends MockBloc<AdminWordEvent, AdminWordState>
     implements AdminWordBloc {}
+
+class MockAIRequestBloc extends MockBloc<AIRequestEvent, AIRequestState>
+    implements AIRequestBloc {}
 
 class MockModerationBloc extends MockBloc<ModerationEvent, ModerationState>
     implements ModerationBloc {}
@@ -79,6 +85,7 @@ Widget buildApp({
   MockAdminWordBloc? wordBloc,
   MockModerationBloc? modBloc,
   MockUserMgmtBloc? userBloc,
+  MockAIRequestBloc? aiBloc,
 }) {
   return MultiBlocProvider(
     providers: [
@@ -86,6 +93,7 @@ Widget buildApp({
       if (wordBloc != null) BlocProvider<AdminWordBloc>.value(value: wordBloc),
       if (modBloc != null) BlocProvider<ModerationBloc>.value(value: modBloc),
       if (userBloc != null) BlocProvider<UserMgmtBloc>.value(value: userBloc),
+      if (aiBloc != null) BlocProvider<AIRequestBloc>.value(value: aiBloc),
     ],
     child: MaterialApp.router(
       theme: AppTheme.light,
@@ -237,11 +245,14 @@ void main() {
   group('AdminContributionReviewPage', () {
     testWidgets('Tolak button disabled when note is empty', (tester) async {
       final mockMod = MockModerationBloc();
+      final mockAI = MockAIRequestBloc();
       when(() => mockMod.state).thenReturn(ModerationLoaded(queue: [tContrib]));
+      when(() => mockAI.state).thenReturn(const AIRequestInitial());
 
       await tester.pumpWidget(buildApp(
         authBloc: mockAuth,
         modBloc: mockMod,
+        aiBloc: mockAI,
         page: const AdminContributionReviewPage(contributionId: 'c1'),
       ));
       await tester.pump();
@@ -254,11 +265,14 @@ void main() {
 
     testWidgets('shows payload for new_word type correctly', (tester) async {
       final mockMod = MockModerationBloc();
+      final mockAI = MockAIRequestBloc();
       when(() => mockMod.state).thenReturn(ModerationLoaded(queue: [tContrib]));
+      when(() => mockAI.state).thenReturn(const AIRequestInitial());
 
       await tester.pumpWidget(buildApp(
         authBloc: mockAuth,
         modBloc: mockMod,
+        aiBloc: mockAI,
         page: const AdminContributionReviewPage(contributionId: 'c1'),
       ));
       await tester.pump();

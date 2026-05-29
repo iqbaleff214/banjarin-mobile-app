@@ -8,6 +8,7 @@ import '../../../dictionary/data/models/word_summary_model.dart';
 import '../../../identity/data/models/user_model.dart';
 import '../../../identity/domain/entities/user_role.dart';
 import '../../domain/repositories/admin_repository.dart';
+import '../models/ai_request_model.dart';
 import '../models/moderation_stats_model.dart';
 
 abstract class AdminRemoteDataSource {
@@ -34,6 +35,16 @@ abstract class AdminRemoteDataSource {
       {required String contributionId, String? note});
   Future<ContributionModel> rejectContribution(
       {required String contributionId, required String note});
+
+  // AI Enrichment
+  Future<AIRequestModel> triggerEnrich({required String wordId});
+  Future<AIRequestModel> triggerExample({required String wordId});
+  Future<AIRequestModel> triggerRelated({required String wordId});
+  Future<AIRequestModel> runQualityCheck({required String contributionId});
+  Future<PaginatedResult<AIRequestModel>> getAIRequests(GetAIRequestsParams p);
+  Future<AIRequestModel> getAIRequestDetail({required String requestId});
+  Future<AIRequestModel> approveAIRequest({required String requestId});
+  Future<AIRequestModel> rejectAIRequest({required String requestId});
 }
 
 class AdminRemoteDataSourceImpl implements AdminRemoteDataSource {
@@ -198,4 +209,55 @@ class AdminRemoteDataSourceImpl implements AdminRemoteDataSource {
     return ContributionModel.fromJson(
         response.data['data'] as Map<String, dynamic>);
   }
+
+  // -------------------------------------------------------------------------
+  // AI Enrichment
+  // -------------------------------------------------------------------------
+
+  AIRequestModel _parseAIRequest(Response response) =>
+      AIRequestModel.fromJson(response.data['data'] as Map<String, dynamic>);
+
+  @override
+  Future<AIRequestModel> triggerEnrich({required String wordId}) async =>
+      _parseAIRequest(await _dio.post('/admin/ai/enrich/$wordId'));
+
+  @override
+  Future<AIRequestModel> triggerExample({required String wordId}) async =>
+      _parseAIRequest(await _dio.post('/admin/ai/example/$wordId'));
+
+  @override
+  Future<AIRequestModel> triggerRelated({required String wordId}) async =>
+      _parseAIRequest(await _dio.post('/admin/ai/related/$wordId'));
+
+  @override
+  Future<AIRequestModel> runQualityCheck(
+      {required String contributionId}) async =>
+      _parseAIRequest(await _dio.post('/admin/ai/check/$contributionId'));
+
+  @override
+  Future<PaginatedResult<AIRequestModel>> getAIRequests(
+      GetAIRequestsParams p) async {
+    final response = await _dio.get('/admin/ai/requests', queryParameters: {
+      'page': p.page,
+      'per_page': p.perPage,
+      if (p.type != null) 'type': p.type!.name,
+      if (p.status != null) 'status': p.status!.name,
+      if (p.reviewStatus != null) 'review_status': p.reviewStatus!.name,
+    });
+    return _paginate(
+        response.data as Map<String, dynamic>, AIRequestModel.fromJson);
+  }
+
+  @override
+  Future<AIRequestModel> getAIRequestDetail({required String requestId}) async =>
+      _parseAIRequest(await _dio.get('/admin/ai/requests/$requestId'));
+
+  @override
+  Future<AIRequestModel> approveAIRequest({required String requestId}) async =>
+      _parseAIRequest(
+          await _dio.patch('/admin/ai/requests/$requestId/approve'));
+
+  @override
+  Future<AIRequestModel> rejectAIRequest({required String requestId}) async =>
+      _parseAIRequest(await _dio.patch('/admin/ai/requests/$requestId/reject'));
 }

@@ -11,6 +11,7 @@ import '../../../dictionary/domain/entities/word.dart';
 import '../../../dictionary/domain/entities/word_summary.dart';
 import '../../../identity/domain/entities/user.dart';
 import '../../../identity/domain/entities/user_role.dart';
+import '../../domain/entities/ai_request.dart';
 import '../../domain/entities/moderation_stats.dart';
 import '../../domain/repositories/admin_repository.dart';
 import '../datasources/admin_remote_data_source.dart';
@@ -199,4 +200,74 @@ class AdminRepositoryImpl implements AdminRepository {
       return _mapDioException(e);
     }
   }
+
+  // -------------------------------------------------------------------------
+  // AI Enrichment
+  // -------------------------------------------------------------------------
+
+  Future<Either<Failure, AIRequest>> _wrapAI(
+    Future<AIRequest> Function() fn,
+  ) async {
+    try {
+      return Right(await fn());
+    } on DioException catch (e) {
+      return _mapDioException(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, AIRequest>> triggerEnrich({required String wordId}) =>
+      _wrapAI(() async =>
+          (await _remote.triggerEnrich(wordId: wordId)).toEntity());
+
+  @override
+  Future<Either<Failure, AIRequest>> triggerExample({required String wordId}) =>
+      _wrapAI(() async =>
+          (await _remote.triggerExample(wordId: wordId)).toEntity());
+
+  @override
+  Future<Either<Failure, AIRequest>> triggerRelated({required String wordId}) =>
+      _wrapAI(() async =>
+          (await _remote.triggerRelated(wordId: wordId)).toEntity());
+
+  @override
+  Future<Either<Failure, AIRequest>> runQualityCheck(
+          {required String contributionId}) =>
+      _wrapAI(() async =>
+          (await _remote.runQualityCheck(contributionId: contributionId))
+              .toEntity());
+
+  @override
+  Future<Either<Failure, PaginatedResult<AIRequest>>> getAIRequests(
+      GetAIRequestsParams params) async {
+    try {
+      final result = await _remote.getAIRequests(params);
+      return Right(PaginatedResult(
+        items: result.items.map((m) => m.toEntity()).toList(),
+        page: result.page,
+        perPage: result.perPage,
+        total: result.total,
+      ));
+    } on DioException catch (e) {
+      return _mapDioException(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, AIRequest>> getAIRequestDetail(
+          {required String requestId}) =>
+      _wrapAI(() async =>
+          (await _remote.getAIRequestDetail(requestId: requestId)).toEntity());
+
+  @override
+  Future<Either<Failure, AIRequest>> approveAIRequest(
+          {required String requestId}) =>
+      _wrapAI(() async =>
+          (await _remote.approveAIRequest(requestId: requestId)).toEntity());
+
+  @override
+  Future<Either<Failure, AIRequest>> rejectAIRequest(
+          {required String requestId}) =>
+      _wrapAI(() async =>
+          (await _remote.rejectAIRequest(requestId: requestId)).toEntity());
 }

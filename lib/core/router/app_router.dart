@@ -12,6 +12,8 @@ import '../../features/admin/presentation/pages/admin_moderation_queue_page.dart
 import '../../features/admin/presentation/pages/admin_user_detail_page.dart';
 import '../../features/admin/presentation/pages/admin_user_list_page.dart';
 import '../../features/admin/presentation/pages/admin_word_form_page.dart';
+import '../../features/admin/presentation/pages/admin_ai_request_detail_page.dart';
+import '../../features/admin/presentation/pages/admin_ai_requests_page.dart';
 import '../../features/admin/presentation/pages/admin_word_list_page.dart';
 import '../../features/ai/presentation/pages/terjemah_page.dart';
 import '../../features/community/presentation/pages/contribution_edit_word_page.dart';
@@ -264,12 +266,12 @@ GoRouter createRouter() {
           ),
           GoRoute(
             path: 'ai/permintaan',
-            builder: (_, _) => const _PlaceholderPage('Permintaan AI'),
+            builder: (_, _) => const AdminAIRequestsPage(),
           ),
           GoRoute(
             path: 'ai/permintaan/:id',
-            builder: (context, state) => _PlaceholderPage(
-              'Permintaan AI: ${state.pathParameters['id']}',
+            builder: (context, state) => AdminAIRequestDetailPage(
+              requestId: state.pathParameters['id']!,
             ),
           ),
         ],

@@ -2,14 +2,101 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/error/failures.dart';
+import '../../../../core/router/routes.dart';
 import '../../../community/presentation/widgets/contribution_form_fields.dart';
 import '../../../dictionary/domain/entities/word.dart';
 import '../../../dictionary/domain/entities/word_class.dart';
+import '../../domain/entities/ai_request.dart';
 import '../../domain/repositories/admin_repository.dart';
 import '../bloc/admin_word_bloc.dart';
 import '../bloc/admin_word_event.dart';
 import '../bloc/admin_word_state.dart';
+import '../bloc/ai_request_bloc.dart';
+import '../bloc/ai_request_event.dart';
+import '../bloc/ai_request_state.dart';
 import '../widgets/admin_guard.dart';
+
+// ─── AI trigger buttons widget ───────────────────────────────────────────────
+
+class _AITriggerButtons extends StatelessWidget {
+  final String wordId;
+  const _AITriggerButtons({required this.wordId});
+
+  void _trigger(BuildContext context, AIRequestType type) {
+    context.read<AIRequestBloc>().add(
+          TriggerAIEvent(type: type, wordId: wordId),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AIRequestBloc, AIRequestState>(
+      listener: (context, state) {
+        if (state is Triggered) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Permintaan AI dikirim.'),
+              action: SnackBarAction(
+                label: 'Lihat',
+                onPressed: () => context.push(Routes.adminAiRequests),
+              ),
+            ),
+          );
+        } else if (state is AIRequestError &&
+            state.failure is RateLimitedFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              key: const Key('rate_limit_snackbar'),
+              content: Text(
+                'Batas permintaan tercapai. Coba lagi dalam '
+                '${(state.failure as RateLimitedFailure).retryAfterSeconds ~/ 60} menit.',
+              ),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isTriggering = state is Triggering;
+        return Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            OutlinedButton.icon(
+              key: const Key('trigger_enrich_button'),
+              icon: const Icon(Icons.auto_awesome, size: 16),
+              label: const Text('Perkaya Definisi'),
+              onPressed: isTriggering
+                  ? null
+                  : () => _trigger(
+                      context, AIRequestType.enrich_definition),
+            ),
+            OutlinedButton.icon(
+              key: const Key('trigger_example_button'),
+              icon: const Icon(Icons.format_quote, size: 16),
+              label: const Text('Sarankan Contoh'),
+              onPressed: isTriggering
+                  ? null
+                  : () => _trigger(
+                      context, AIRequestType.suggest_example),
+            ),
+            OutlinedButton.icon(
+              key: const Key('trigger_related_button'),
+              icon: const Icon(Icons.link, size: 16),
+              label: const Text('Sarankan Kata Terkait'),
+              onPressed: isTriggering
+                  ? null
+                  : () => _trigger(
+                      context, AIRequestType.suggest_related),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 class AdminWordFormPage extends StatefulWidget {
   final Word? existingWord;
@@ -200,6 +287,20 @@ class _AdminWordFormPageState extends State<AdminWordFormPage> {
                             )
                           : Text(widget.isEdit ? 'Simpan Perubahan' : 'Tambah Kata'),
                     ),
+                    // AI trigger buttons — edit mode only
+                    if (widget.isEdit && widget.existingWord != null) ...[
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      Text(
+                        'Pengayaan AI',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 8),
+                      _AITriggerButtons(wordId: widget.existingWord!.id),
+                    ],
                   ],
                 ),
               ),
