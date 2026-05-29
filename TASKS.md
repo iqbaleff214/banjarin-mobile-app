@@ -23,7 +23,7 @@
 
 ---
 
-- [ ] **TASK-001: Clean Architecture Directory Scaffold**
+- [x] **TASK-001: Clean Architecture Directory Scaffold**
 
   **Description:** Create the full `lib/` and `test/` directory structure as specified in PRD §13.3. No code — structure only, with placeholder `.gitkeep` files so the tree is committed.
 
@@ -43,7 +43,7 @@
 
 ---
 
-- [ ] **TASK-002: Core Error Types and `Either` Monad**
+- [x] **TASK-002: Core Error Types and `Either` Monad**
 
   **Description:** Define all `Failure` subtypes used across the app and establish the `Either<Failure, T>` return convention for use cases and repositories. Failures map directly to API error codes in `openapi.yaml`.
 
@@ -65,7 +65,7 @@
 
 ---
 
-- [ ] **TASK-003: Dio HTTP Client Setup**
+- [x] **TASK-003: Dio HTTP Client Setup**
 
   **Description:** Configure a `Dio` instance with base URL, default headers (`Content-Type: application/json`), timeouts, and error response mapping. Response interceptor maps API error envelopes (`success: false, error.code`) to the `Failure` subtypes from TASK-002.
 
@@ -88,7 +88,7 @@
 
 ---
 
-- [ ] **TASK-004: Token Interceptor (Silent Refresh + 401 Redirect)**
+- [x] **TASK-004: Token Interceptor (Silent Refresh + 401 Redirect)**
 
   **Description:** Dio `QueuedInterceptorsWrapper` that attaches `Authorization: Bearer <access_token>` to every request. On 401 response, calls `POST /auth/refresh` once. If refresh succeeds, retries the original request. If refresh returns 401, clears tokens from secure storage and emits an `UnauthorizedFailure` that triggers navigation to the Login screen.
 
@@ -113,7 +113,7 @@
 
 ---
 
-- [ ] **TASK-005: Secure Storage Abstraction**
+- [x] **TASK-005: Secure Storage Abstraction**
 
   **Description:** Abstract over `flutter_secure_storage` for storing and retrieving JWT access token, refresh token, and their expiry. Exposes a clean interface so the token interceptor and AuthBloc never depend on `flutter_secure_storage` directly.
 
@@ -132,7 +132,7 @@
 
 ---
 
-- [ ] **TASK-006: Hive Local Cache Abstraction**
+- [x] **TASK-006: Hive Local Cache Abstraction**
 
   **Description:** Initialize Hive for local caching of word list (first page), word detail, and bookmarks. Define a generic `LocalDataSource` interface and a Hive-backed implementation with TTL support.
 
@@ -154,7 +154,7 @@
 
 ---
 
-- [ ] **TASK-007: GoRouter Navigation Setup + Deep Links**
+- [x] **TASK-007: GoRouter Navigation Setup + Deep Links**
 
   **Description:** Configure `go_router` with all named routes, authentication redirect logic, and deep link handling for `banjarin://verify-email`, `banjarin://reset-password`, and `banjarin://word/{id}`.
 
@@ -173,7 +173,7 @@
 
 ---
 
-- [ ] **TASK-008: App Theme (Colors, Typography, Dark Mode)**
+- [x] **TASK-008: App Theme (Colors, Typography, Dark Mode)**
 
   **Description:** Define `ThemeData` for light and dark modes using the color palette from PRD §6.1. Include word class badge colors, source badge colors, and text styles for Banjar word display.
 
