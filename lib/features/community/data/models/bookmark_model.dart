@@ -19,7 +19,7 @@ class BookmarkModel {
       id: json['id'] as String,
       wordId: json['word_id'] as String,
       word: WordSummaryModel.fromJson(json['word'] as Map<String, dynamic>),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String? ?? DateTime.now().toIso8601String()),
     );
   }
 

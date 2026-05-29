@@ -35,7 +35,7 @@ class ContributionModel {
       status: ContributionStatus.fromString(json['status'] as String),
       reviewerId: json['reviewer_id'] as String?,
       reviewerNote: json['reviewer_note'] as String?,
-      submittedAt: DateTime.parse(json['submitted_at'] as String),
+      submittedAt: DateTime.parse(json['submitted_at'] as String? ?? DateTime.now().toIso8601String()),
       reviewedAt: json['reviewed_at'] != null
           ? DateTime.parse(json['reviewed_at'] as String)
           : null,

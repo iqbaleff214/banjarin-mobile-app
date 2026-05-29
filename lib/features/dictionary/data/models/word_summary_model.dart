@@ -35,7 +35,9 @@ class WordSummaryModel {
       isRoot: json['is_root'] as bool? ?? true,
       primaryMeaning: json['primary_meaning'] as String? ?? '',
       source: ContentSource.fromString(json['source'] as String? ?? 'seeded'),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
     );
   }
 

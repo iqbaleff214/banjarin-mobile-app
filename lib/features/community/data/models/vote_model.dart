@@ -24,7 +24,7 @@ class VoteModel {
       targetType: VoteTargetType.fromString(json['target_type'] as String),
       targetId: json['target_id'] as String,
       value: VoteValue.fromString(json['value'] as String),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String? ?? DateTime.now().toIso8601String()),
     );
   }
 
