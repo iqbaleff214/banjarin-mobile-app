@@ -1,8 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+const _stagingUrl = String.fromEnvironment('API_BASE_URL');
+bool get _hasStagingUrl => _stagingUrl.isNotEmpty;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  // Skip all tests when no staging URL is configured
+  if (!_hasStagingUrl) {
+    debugPrint('Integration tests skipped: STAGING_API_URL not set.');
+    return;
+  }
 
   group('Auth Flow', () {
     testWidgets('Register → verify email notice → login → logout → login again',

@@ -75,7 +75,9 @@ void main() {
 
       // Tap skip — verify it can be tapped without error
       await tester.tap(find.byKey(const Key('skip_button')));
-      for (int i = 0; i < 8; i++) await tester.pump();
+      for (int i = 0; i < 8; i++) {
+        await tester.pump();
+      }
 
       // After tap, no exception thrown — navigation intent registered
       // Full navigation tested in integration_test/
@@ -98,7 +100,9 @@ void main() {
 
       // Tap the button — verify it can be tapped without error
       await tester.tap(find.byKey(const Key('masuk_daftar_button')));
-      for (int i = 0; i < 8; i++) await tester.pump();
+      for (int i = 0; i < 8; i++) {
+        await tester.pump();
+      }
 
       // Navigation happens — verify page state is consistent
       expect(find.byType(Exception).evaluate().isEmpty, isTrue);

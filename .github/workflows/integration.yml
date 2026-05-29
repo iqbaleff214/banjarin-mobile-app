@@ -6,9 +6,11 @@ on:
 
 jobs:
   integration-test:
-    runs-on: ubuntu-latest
-    env:
-      API_BASE_URL: ${{ secrets.STAGING_API_URL }}
+    # Only run when a staging URL is configured
+    if: ${{ secrets.STAGING_API_URL != '' }}
+    runs-on: macos-latest        # macOS enables hardware acceleration (HAXM)
+    timeout-minutes: 45
+
     steps:
       - uses: actions/checkout@v4
 
@@ -16,16 +18,37 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: stable
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Create .env from staging
-        run: |
-          echo "API_BASE_URL=${{ secrets.STAGING_API_URL }}" > .env
+      - name: Create .env for staging
+        run: echo "API_BASE_URL=${{ secrets.STAGING_API_URL }}" > .env
 
-      - name: Start Android emulator
+      - name: Run integration tests on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
-          script: flutter test integration_test/ --dart-define=API_BASE_URL=${{ secrets.STAGING_API_URL }}
+          api-level: 30            # API 30 has stable default;x86_64 images
+          target: default
+          arch: x86_64             # x86_64 works reliably on macOS runners
+          cores: 2
+          ram-size: 4096M
+          disk-size: 6144M
+          avd-name: integration_avd
+          force-avd-creation: false
+          emulator-boot-timeout: 600
+          emulator-options: -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
+          profile: Nexus 6
+          script: |
+            flutter test integration_test/ \
+              --dart-define=API_BASE_URL=${{ secrets.STAGING_API_URL }} \
+              --reporter=expanded
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: build/test-results/
