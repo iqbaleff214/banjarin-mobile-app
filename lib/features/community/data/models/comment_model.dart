@@ -25,14 +25,14 @@ class CommentModel {
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
-      id: json['id'] as String,
-      userId: json['user_id'] as String,
+      id: json['id'] as String? ?? '',
+      userId: json['user_id'] as String? ?? '',
       authorName: json['author_name'] as String?,
       targetType: CommentTargetType.fromString(
         json['target_type'] as String? ?? 'word',
       ),
       targetId: json['target_id'] as String,
-      body: json['body'] as String,
+      body: json['body'] as String? ?? '',
       isFlagged: json['is_flagged'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String? ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updated_at'] as String? ?? DateTime.now().toIso8601String()),

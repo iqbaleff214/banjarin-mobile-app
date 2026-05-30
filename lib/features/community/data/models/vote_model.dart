@@ -19,8 +19,8 @@ class VoteModel {
 
   factory VoteModel.fromJson(Map<String, dynamic> json) {
     return VoteModel(
-      id: json['id'] as String,
-      userId: json['user_id'] as String,
+      id: json['id'] as String? ?? '',
+      userId: json['user_id'] as String? ?? '',
       targetType: VoteTargetType.fromString(json['target_type'] as String),
       targetId: json['target_id'] as String,
       value: VoteValue.fromString(json['value'] as String),

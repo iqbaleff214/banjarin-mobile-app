@@ -27,8 +27,8 @@ class WordSummaryModel {
 
   factory WordSummaryModel.fromJson(Map<String, dynamic> json) {
     return WordSummaryModel(
-      id: json['id'] as String,
-      banjar: json['banjar'] as String,
+      id: json['id'] as String? ?? '',
+      banjar: json['banjar'] as String? ?? '',
       dialect: json['dialect'] as String? ?? 'hulu',
       wordClass: WordClass.fromString(json['word_class'] as String? ?? 'n'),
       homonymNumber: json['homonym_number'] as int? ?? 1,

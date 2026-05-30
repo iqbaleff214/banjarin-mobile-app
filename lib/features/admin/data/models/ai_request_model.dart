@@ -35,7 +35,7 @@ class AIRequestModel {
 
   factory AIRequestModel.fromJson(Map<String, dynamic> json) {
     return AIRequestModel(
-      id: json['id'] as String,
+      id: json['id'] as String? ?? '',
       type: AIRequestType.fromString(json['type'] as String? ?? 'enrich_definition'),
       targetWordId: json['target_word_id'] as String?,
       targetContributionId: json['target_contribution_id'] as String?,

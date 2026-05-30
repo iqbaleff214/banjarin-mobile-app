@@ -27,9 +27,9 @@ class ContributionModel {
 
   factory ContributionModel.fromJson(Map<String, dynamic> json) {
     return ContributionModel(
-      id: json['id'] as String,
+      id: json['id'] as String? ?? '',
       type: ContributionType.fromString(json['type'] as String),
-      contributorId: json['contributor_id'] as String,
+      contributorId: json['contributor_id'] as String? ?? '',
       targetWordId: json['target_word_id'] as String?,
       payload: (json['payload'] as Map<String, dynamic>?) ?? {},
       status: ContributionStatus.fromString(json['status'] as String),

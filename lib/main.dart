@@ -96,31 +96,42 @@ class _AppWithListeners extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Global 401 handler: redirect to login when session expires
-    return BlocListener<AuthBloc, AuthState>(
-      listenWhen: (prev, curr) =>
-          curr is Unauthenticated && prev is! Unauthenticated,
-      listener: (context, state) {
-        // Navigate to login only from protected routes
-        final router = GoRouter.of(context);
-        final currentUri = router.routerDelegate.currentConfiguration.uri.toString();
-        final publicRoutes = [Routes.login, Routes.register, Routes.home, '/'];
-        final isProtected =
-            !publicRoutes.any((r) => currentUri.startsWith(r));
-        if (isProtected) {
-          context.go(Routes.login);
-        }
-      },
-      child: NetworkBanner(
-        connectivityChecker: sl<ConnectivityChecker>(),
-        child: MaterialApp.router(
-          title: 'Banjarin',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: ThemeMode.system,
-          routerConfig:
-              createRouter(initialLocation: showOnboarding ? Routes.onboarding : Routes.home),
+    // NetworkBanner wraps everything. BlocListener is placed inside
+    // MaterialApp.router's builder so GoRouter.of(context) is valid.
+    return NetworkBanner(
+      connectivityChecker: sl<ConnectivityChecker>(),
+      child: MaterialApp.router(
+        title: 'Banjarin',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        routerConfig:
+            createRouter(initialLocation: showOnboarding ? Routes.onboarding : Routes.home),
+        builder: (routerContext, child) => BlocListener<AuthBloc, AuthState>(
+          listenWhen: (prev, curr) =>
+              curr is Unauthenticated && prev is! Unauthenticated,
+          listener: (listenerContext, state) {
+            // routerContext has GoRouter — safe to call GoRouter.of / context.go
+            final uri = GoRouter.of(routerContext)
+                .routerDelegate
+                .currentConfiguration
+                .uri
+                .toString();
+            final publicRoutes = [
+              Routes.login,
+              Routes.register,
+              Routes.home,
+              '/',
+              Routes.onboarding,
+            ];
+            final isProtected =
+                !publicRoutes.any((r) => uri == r || uri.startsWith('$r/'));
+            if (isProtected) {
+              GoRouter.of(routerContext).go(Routes.login);
+            }
+          },
+          child: child ?? const SizedBox.shrink(),
         ),
       ),
     );

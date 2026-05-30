@@ -45,8 +45,8 @@ class WordModel {
 
   factory WordModel.fromJson(Map<String, dynamic> json) {
     return WordModel(
-      id: json['id'] as String,
-      banjar: json['banjar'] as String,
+      id: json['id'] as String? ?? '',
+      banjar: json['banjar'] as String? ?? '',
       banjarSyllabified: json['banjar_syllabified'] as String?,
       dialect: json['dialect'] as String? ?? 'hulu',
       wordClass: WordClass.fromString(json['word_class'] as String? ?? 'n'),
